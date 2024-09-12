@@ -11,39 +11,32 @@ import { toast } from "react-toastify";
 import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
+import Swal from "sweetalert2";
 
 export const validationSchema = z.object({
-  package_name: z.string().min(1, "select any network"),
-  package_price: z.string().min(1, "select any network"),
-  package_duration: z.string().min(1, "select any network"),
-  savings: z.string().min(1, "select any network"),
-  sort_description: z.string().min(1, "select any network"),
-  long_description: z.string().min(1, "select any network"),
+  coupon_name: z.string().min(1, "this field is required"),
+  validity: z.string().min(1, "this field is required"),
+  percentage: z.string().min(1, "this field is required"),
 });
 export type IProps = {
   modal: boolean;
   handleModal: () => void;
+  getData: any;
 };
-const AddNewCoupon = ({ handleModal, modal }: IProps) => {
+const AddNewCoupon = ({ handleModal, modal, getData }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const formSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
-    return;
-    const tokenData = {
-      token_id: data.network,
-    };
     setLoading(true);
     try {
-      const response = await axiosInstance.post(
-        "/client-token/store",
-        tokenData
-      );
-      console.log(response.data);
-
+      const response = await axiosInstance.post("/coupon/store", data);
       if (response.data.success == 200) {
         setLoading(false);
-        toast.success("Successfuly added currency");
+        Swal.fire({
+          title: "Coupon add successfully",
+          icon: "success",
+        });
+        getData();
       }
       if (response.data.success != 200) {
         setLoading(false);
@@ -85,9 +78,9 @@ const AddNewCoupon = ({ handleModal, modal }: IProps) => {
               onSubmit={formSubmit}
               resolver={zodResolver(validationSchema)}
               defaultValues={{
-                couponName: "",
-                CouponValidity: "",
-                CouponPercentage: "",
+                coupon_name: "",
+                validity: "",
+                percentage: "",
               }}
             >
               <div className="md:w-10/12 w-full mx-auto">
@@ -96,7 +89,7 @@ const AddNewCoupon = ({ handleModal, modal }: IProps) => {
                     Coupon Name
                   </p>
                   <InputField
-                    name="couponName"
+                    name="coupon_name"
                     type="text"
                     className="px-4"
                     placeholder="Enter Your Package Name"
@@ -107,7 +100,7 @@ const AddNewCoupon = ({ handleModal, modal }: IProps) => {
                     Coupon Validity (Days)
                   </p>
                   <InputField
-                    name="CouponValidity"
+                    name="validity"
                     type="text"
                     className="px-4"
                     placeholder="Enter Your Package Price"
@@ -118,7 +111,7 @@ const AddNewCoupon = ({ handleModal, modal }: IProps) => {
                     Coupon Percentage
                   </p>
                   <InputField
-                    name="couponPercentage"
+                    name="percentage"
                     type="number"
                     className="px-4"
                     placeholder="Enter Your Package Duration"

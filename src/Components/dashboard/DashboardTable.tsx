@@ -15,7 +15,7 @@ const DashboardTable = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get("/user-last-sessions");
-      console.log(response)
+      // console.log(response)
       if (response?.data?.success == 200) {
         setLastSessions(response?.data?.sessions?.data);
       }

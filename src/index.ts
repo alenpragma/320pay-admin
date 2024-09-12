@@ -174,7 +174,7 @@ export const submenuItem: MenuInterface[] = [
     icon2: withdraw1Hover,
   },
   {
-    id: 312,
+    id: 313,
     pathname: "settings/coupon",
     item: "Coupon Settings",
     icon1: withdraw1,

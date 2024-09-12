@@ -10,7 +10,6 @@ const Header = (props: {
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
   const { pathname } = useLocation();
-  console.log(pathname);
   const [rotate, setRotate] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
   const [visible, setVisible] = useState(false);

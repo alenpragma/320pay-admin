@@ -45,11 +45,12 @@
 
 // export default InputField
 
+import { HTMLInputTypeAttribute } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 type TInputProps = {
   name: string;
-  type?: string;
+  type?: HTMLInputTypeAttribute;
   className?: string;
   placeholder?: string;
   required?: boolean;
@@ -81,6 +82,18 @@ const InputField = ({
             placeholder={placeholder}
             required={required}
             maxLength={maxlength}
+            onKeyDown={(e) => {
+              if (type === "number") {
+                if (
+                  e.key === "e" ||
+                  e.key === "E" ||
+                  e.key === "+" ||
+                  e.key === "-"
+                ) {
+                  e.preventDefault();
+                }
+              }
+            }}
           />
           {error && type !== "checkbox" && (
             <span className="text-[#e82828] text-[14px]">{error.message}</span>

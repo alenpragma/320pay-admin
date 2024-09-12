@@ -1,12 +1,12 @@
 export const getPaymentaToken = () => {
-  const token = localStorage.getItem("paymentaToken")
+  const token = localStorage.getItem("paymentAdminToken")
   return token
 }
 
 export const setPaymentaToken = (token: string) => {
-  localStorage.setItem("paymentaToken", token)
+  localStorage.setItem("paymentAdminToken", token)
 }
 
 export const removePaymentaToken = () => {
-  localStorage.removeItem("paymentaToken")
+  localStorage.removeItem("paymentAdminToken")
 }
