@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------react select style start------------- */
+/* style.css */
+
+.custom-select__control {
+  background-color: #5734dc !important;
+  color: white !important;
+  font-weight: 500 !important;
+  border-color: #5734dc !important;
+  width: 180px !important;
+}
+.custom-select__control.currency {
+  background-color: #5734dc !important;
+  color: white !important;
+  font-weight: 500 !important;
+  border-color: #5734dc !important;
+  width: 180px !important;
+}
+
+.custom-select__single-value {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.custom-select__option {
+  background-color: white !important;
+  color: black !important;
+  font-weight: 500 !important;
+}
+
+.custom-select__option--is-focused {
+  background-color: lightblue !important;
+}
+
+.custom-select__option--is-selected {
+  background-color: #5734dc !important;
+  color: white !important;
+}
+
+.custom-select__menu {
+  /* background-color: #5734DC !important; */
+}
+
+.custom-select__placeholder {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.custom-select__indicator {
+  color: white !important; /* This will make the dropdown icon white */
+}
+
+.custom-select__indicator-separator {
+  background-color: white !important; /* This will make the separator line white, if present */
+}
+
+/* ------------react select style end------------- */
+
+/* Pagination Style */
+
+.swiper-pagination,
+.swiper-button-next,
+.swiper-button-prev {
+  top: unset !important;
+  bottom: unset !important;
+  left: unset !important;
+  right: unset !important;
+  width: auto !important;
+  position: unset !important;
+  margin: 0px !important;
+  color: #fff !important;
+  z-index: 1 !important;
+}
+
+.swiper-button-next::after {
+  content: "" !important;
+}
+.swiper-button-prev::after {
+  content: "" !important;
+}
+.swiper-button-prev.balance,
+.swiper-button-next.balance {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 5px !important;
+  padding: 4px !important;
+}
+
+.paginationButton,
+.pageButton a {
+  width: 30px;
+  height: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  .paginationButton,
+  .pageButton a {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* input number input side icon desable */
+/* Hide the arrows in Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the arrows in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* input number input side icon desable */
+
+@layer components {
+  .start-here-input-field {
+    @apply w-full text-[14px] border border-[#E2E2E9] focus:outline text-[#444444] focus:outline-slate-500 rounded-md py-[2px] px-4;
+  }
+  .start-here-label {
+    @apply text-[#3e3e3e] font-semibold text-[14px];
+  }
+  .start-here-icon {
+    @apply hover:text-primary cursor-pointer border border-slate-300 p-1 w-fit rounded hover:bg-slate-200;
+  }
+}
+
+/* swal modal editing */
+
+.custom-swal-modal {
+  width: 500px; /* Set the width you want */
+  height: auto; /* Set the height if needed */
+  max-width: 90%; /* Ensure it’s responsive */
+  padding: 20px; /* Optional padding */
+}
+
+.custom-swal-modal .swal2-actions {
+  flex-direction: row-reverse; /* Reverse the order of the buttons */
+}
+.custom-swal-modal .swal2-cancel {
+  padding: 10px 30px;
+}
+
+@media (max-width: 768px) {
+  .custom-swal-modal {
+    width: 70%; /* Adjust for smaller screens */
+  }
+}
+
+@media (min-width: 768px) {
+  .custom-swal-modal {
+    width: 400px; /* Adjust for larger screens */
+  }
+}
