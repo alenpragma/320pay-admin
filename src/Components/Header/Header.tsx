@@ -21,7 +21,8 @@ const Header = (props: {
     }
     const cleanedText = text
       .replace(/[\/-]/g, " ") // Replace '/' and '-' with spaces
-      .replace(/dashboard/gi, ""); // Remove the word 'dashboard', case insensitive
+      .replace(/dashboard/gi, "") // Remove the word 'dashboard', case insensitive
+      .replace(/settings/gi, ""); // Remove the word 'settings', case insensitive
     return cleanedText.trim(); // Trim any extra spaces
   };
 

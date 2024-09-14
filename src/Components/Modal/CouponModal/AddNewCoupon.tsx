@@ -1,11 +1,9 @@
 import { RxCross1 } from "react-icons/rx";
 import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import SelectField from "../../Forms/SelecetField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { boolean, z } from "zod";
-import { useEffect, useState } from "react";
-import Loading from "../../Lottie/Loading";
+import {z } from "zod";
+import { useState } from "react";
 import axiosInstance from "../../../utils/axiosConfig";
 import { toast } from "react-toastify";
 import LoaingAnimation from "../../Loading/LoaingAnimation";
@@ -83,7 +81,7 @@ const AddNewCoupon = ({ handleModal, modal, getData }: IProps) => {
                 percentage: "",
               }}
             >
-              <div className="md:w-10/12 w-full mx-auto">
+              <div className="md:w-11/12 w-full mx-auto">
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
                     Coupon Name
@@ -101,7 +99,7 @@ const AddNewCoupon = ({ handleModal, modal, getData }: IProps) => {
                   </p>
                   <InputField
                     name="validity"
-                    type="text"
+                    type="number"
                     className="px-4"
                     placeholder="Enter Your Package Price"
                   />

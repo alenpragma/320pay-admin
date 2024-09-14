@@ -64,7 +64,7 @@ const Form = ({
   defaultValues,
   onChange,
 }: TFormProps) => {
-  const formConfig: TFormConfig = {};
+  const formConfig: TFormConfig = {resolver, defaultValues};
   if (resolver) {
     formConfig["resolver"] = resolver;
   }

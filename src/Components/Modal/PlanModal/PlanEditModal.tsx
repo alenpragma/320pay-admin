@@ -3,9 +3,11 @@ import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import SelectField from "../../Forms/SelecetField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useState } from "react";
+import { boolean, z } from "zod";
+import { useEffect, useState } from "react";
+import Loading from "../../Lottie/Loading";
 import axiosInstance from "../../../utils/axiosConfig";
+import { toast } from "react-toastify";
 import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
@@ -17,25 +19,39 @@ export const option = [
 ];
 
 export const validationSchema = z.object({
-  coupon_name: z.string().min(1, "This field is required"),
-  validity: z.string().min(1, "This field is required"),
-  percentage: z.string().min(1, "This field is required"),
-  visible_status: z.string().min(1, "This field is required"),
+  package_name: z.string().min(1, "select any network"),
+  package_price: z.string().min(1, "select any network"),
+  duration: z.string().min(1, "select any network"),
+  no_of_domains: z.string().min(1, "select any network"),
+  short_description: z.string().min(1, "select any network"),
+  description: z.string().min(1, "select any network"),
+  savings: z.string().min(1, "select any network"),
+  status: z.string().min(1, "select any network"),
 });
 export type IProps = {
   modal: boolean;
-  handleModal: (id: string) => void;
-  getData: any;
-  editCoupon?: any;
+  handleModal: (e: string) => void;
+  getData: () => void;
+  planEditData: any;
 };
-const CouponEditModal = ({
+const PlanEditModal = ({
   handleModal,
   modal,
   getData,
-  editCoupon,
+  planEditData,
 }: IProps) => {
-  const { coupon_name, validity, percentage, visible_status } = editCoupon;
+  const {
+    package_name,
+    package_price,
+    duration,
+    no_of_domains,
+    short_description,
+    description,
+    savings,
+    status,
+  } = planEditData;
   const [loading, setLoading] = useState<boolean>(false);
+
   const formSubmit: SubmitHandler<FieldValues> = async (couponData) => {
     setLoading(true);
     const result = await Swal.fire({
@@ -53,9 +69,9 @@ const CouponEditModal = ({
 
     if (result.isConfirmed) {
       try {
-        const response = await axiosInstance.post(`/coupon/update`, {
+        const response = await axiosInstance.post(`/package/update`, {
           ...couponData,
-          id: editCoupon?.id,
+          id: planEditData?.id,
         });
         if (response?.data?.success === 200) {
           Swal.fire({
@@ -66,7 +82,7 @@ const CouponEditModal = ({
               popup: "custom-swal-modal",
             },
           });
-          handleModal("0");
+          handleModal("");
           setLoading(false);
         }
         getData();
@@ -84,12 +100,13 @@ const CouponEditModal = ({
       }
     }
   };
+
   return (
     <div className="w-full">
       <div
         className={` ${
           modal
-            ? " opacity-100 fixed bg-[#07070745] w-full h-screen z-[100] right-0 top-0 bottom-0 m-auto "
+            ? " opacity-100 fixed bg-[#07070745] w-full h-screen z-[100] right-0 top-0 bottom-0 m-auto"
             : "opacity-0 -z-50"
         }`}
         onClick={() => handleModal("")}
@@ -103,64 +120,96 @@ const CouponEditModal = ({
       >
         <div className="w-full h-full rounded bg-[#ffffff] ">
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
-            <h4>Update Coupon</h4>
+            <h4> Add New Plan</h4>
             <RxCross1
               onClick={() => handleModal("")}
               className="cursor-pointer hover:scale-105"
             />
           </div>
           <div className="px-5 pb-10 pt-8 max-h-[500px] overflow-auto">
-            {editCoupon ? (
+            {planEditData ? (
               <Form
                 onSubmit={formSubmit}
                 resolver={zodResolver(validationSchema)}
                 defaultValues={{
-                  coupon_name: coupon_name,
-                  percentage: percentage,
-                  validity: validity,
-                  visible_status: visible_status,
+                  package_name: package_name || "",
+                  package_price: package_price || "",
+                  duration: duration || "",
+                  no_of_domains: no_of_domains || "",
+                  short_description: short_description || "",
+                  description: description || "",
+                  savings: savings || "",
+                  status: status || "",
                 }}
               >
                 <div className="md:w-11/12 w-full mx-auto">
                   <div className="relative mb-4">
                     <p className="font-semibold text-secondary mb-1">
-                      Coupon Name
+                      Package Name
                     </p>
                     <InputField
-                      name="coupon_name"
+                      name="package_name"
                       type="text"
                       className="px-4"
                     />
                   </div>
                   <div className="relative mb-4">
                     <p className="font-semibold text-secondary mb-1">
-                      Coupon Validity (Days)
+                      Package Price
                     </p>
                     <InputField
-                      name="validity"
+                      name="package_price"
                       type="text"
                       className="px-4"
-                      placeholder="Enter Your Package Price"
                     />
                   </div>
                   <div className="relative mb-4">
                     <p className="font-semibold text-secondary mb-1">
-                      Coupon Percentage
+                      Package Duration
+                    </p>
+                    <InputField name="duration" type="text" className="px-4" />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      No of domains
                     </p>
                     <InputField
-                      name="percentage"
-                      type="number"
+                      name="no_of_domains"
+                      type="text"
                       className="px-4"
-                      placeholder="%"
                     />
                   </div>
                   <div className="relative mb-4">
                     <p className="font-semibold text-secondary mb-1">
-                      Coupon Status
+                      Sort Description
                     </p>
+                    <InputField
+                      name="short_description"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Description
+                    </p>
+                    <InputField
+                      name="description"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">Savings</p>
+                    <InputField name="savings" type="text" className="px-4" />
+                  </div>
+
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">Status</p>
                     <SelectField
-                      name="visible_status"
+                      name="status"
                       options={option}
+                      placeholder="Please select an option"
                       type="string"
                       required
                     />
@@ -185,4 +234,4 @@ const CouponEditModal = ({
   );
 };
 
-export default CouponEditModal;
+export default PlanEditModal;

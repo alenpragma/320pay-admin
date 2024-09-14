@@ -1,57 +1,57 @@
 import { RxCross1 } from "react-icons/rx";
 import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import SelectField from "../../Forms/SelecetField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { boolean, z } from "zod";
-import { useEffect, useState } from "react";
-import Loading from "../../Lottie/Loading";
+import { z } from "zod";
+import { useState } from "react";
 import axiosInstance from "../../../utils/axiosConfig";
-import { toast } from "react-toastify";
 import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
+import Swal from "sweetalert2";
 
 export const validationSchema = z.object({
   package_name: z.string().min(1, "select any network"),
   package_price: z.string().min(1, "select any network"),
-  package_duration: z.string().min(1, "select any network"),
+  duration: z.string().min(1, "select any network"),
+  no_of_domains: z.string().min(1, "select any network"),
+  short_description: z.string().min(1, "select any network"),
+  description: z.string().min(1, "select any network"),
   savings: z.string().min(1, "select any network"),
-  sort_description: z.string().min(1, "select any network"),
-  long_description: z.string().min(1, "select any network"),
 });
 export type IProps = {
   modal: boolean;
   handleModal: () => void;
+  getData: () => void;
 };
-const AddNewPlanModal = ({ handleModal, modal }: IProps) => {
+const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const formSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
-    return;
-    const tokenData = {
-      token_id: data.network,
-    };
+  const formSubmit: SubmitHandler<FieldValues> = async (planData) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.post(
-        "/client-token/store",
-        tokenData
-      );
-      console.log(response.data);
-
+      const response = await axiosInstance.post("package/store", planData);
       if (response.data.success == 200) {
         setLoading(false);
-        toast.success("Successfuly added currency");
-      }
-      if (response.data.success != 200) {
-        setLoading(false);
-        toast.error(response?.data?.message);
+        Swal.fire({
+          title: "Plan add successfully",
+          icon: "success",
+          customClass: {
+            popup: "custom-swal-modal",
+          },
+        });
+        getData();
       }
       handleModal();
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        title: "Something Wrong",
+        icon: "error",
+        customClass: {
+          popup: "custom-swal-modal",
+        },
+      });
+      setLoading(false);
     }
   };
 
@@ -85,11 +85,16 @@ const AddNewPlanModal = ({ handleModal, modal }: IProps) => {
               onSubmit={formSubmit}
               resolver={zodResolver(validationSchema)}
               defaultValues={{
-                currency: "",
-                network: "",
+                package_name: "",
+                package_price: "",
+                duration: "",
+                no_of_domains: "",
+                short_description: "",
+                description: "",
+                savings: "",
               }}
             >
-              <div className="md:w-10/12 w-full mx-auto">
+              <div className="md:w-11/12 w-full mx-auto">
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
                     Package Name
@@ -107,7 +112,7 @@ const AddNewPlanModal = ({ handleModal, modal }: IProps) => {
                   </p>
                   <InputField
                     name="package_price"
-                    type="text"
+                    type="number"
                     className="px-4"
                     placeholder="Enter Your Package Price"
                   />
@@ -117,17 +122,19 @@ const AddNewPlanModal = ({ handleModal, modal }: IProps) => {
                     Package Duration
                   </p>
                   <InputField
-                    name="package_duration"
-                    type="text"
+                    name="duration"
+                    type="number"
                     className="px-4"
                     placeholder="Enter Your Package Duration"
                   />
                 </div>
                 <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Savings</p>
+                  <p className="font-semibold text-secondary mb-1">
+                    No of domains
+                  </p>
                   <InputField
-                    name="savings"
-                    type="text"
+                    name="no_of_domains"
+                    type="number"
                     className="px-4"
                     placeholder="10%"
                   />
@@ -137,21 +144,30 @@ const AddNewPlanModal = ({ handleModal, modal }: IProps) => {
                     Sort Description
                   </p>
                   <InputField
-                    name="sort_description"
+                    name="short_description"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Descriptin"
+                    placeholder="Enter Your Short Descriptin"
                   />
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Long Description
+                    Description
                   </p>
                   <InputField
-                    name="long_description"
+                    name="description"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Descriptin"
+                    placeholder="Enter Your Description"
+                  />
+                </div>
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">Savings</p>
+                  <InputField
+                    name="savings"
+                    type="number"
+                    className="px-4"
+                    placeholder="Your savings"
                   />
                 </div>
 
