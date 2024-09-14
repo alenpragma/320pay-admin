@@ -54,7 +54,7 @@ type TInputProps = {
   className?: string;
   placeholder?: string;
   required?: boolean;
-  // defaultValue?: string;
+  defaultValue?: string;
   maxlength?: number;
 };
 
@@ -63,7 +63,7 @@ const InputField = ({
   type,
   className,
   placeholder,
-  // defaultValue,
+  defaultValue,
   required,
   maxlength,
 }: TInputProps) => {
@@ -72,7 +72,7 @@ const InputField = ({
     <Controller
     control={control}
     name={name}
-    // defaultValue={defaultValue}
+    defaultValue={defaultValue}
     render={({ field, fieldState: { error } }) => (
       <div className={`${type === "checkbox" ? "flex flex-col" : ""}`}>
         <input

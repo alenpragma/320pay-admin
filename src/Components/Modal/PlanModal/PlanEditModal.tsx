@@ -34,7 +34,22 @@ export type IProps = {
   getData: () => void;
   planEditData: any;
 };
-const PlanEditModal = ({ handleModal, modal, getData, planEditData }: IProps) => {
+const PlanEditModal = ({
+  handleModal,
+  modal,
+  getData,
+  planEditData,
+}: IProps) => {
+  const {
+    package_name,
+    package_price,
+    duration,
+    no_of_domains,
+    short_description,
+    description,
+    savings,
+    status,
+  } = planEditData;
   const [loading, setLoading] = useState<boolean>(false);
 
   const formSubmit: SubmitHandler<FieldValues> = async (couponData) => {
@@ -107,122 +122,111 @@ const PlanEditModal = ({ handleModal, modal, getData, planEditData }: IProps) =>
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
             <h4> Add New Plan</h4>
             <RxCross1
-             onClick={() => handleModal("")}
+              onClick={() => handleModal("")}
               className="cursor-pointer hover:scale-105"
             />
           </div>
           <div className="px-5 pb-10 pt-8 max-h-[500px] overflow-auto">
-            <Form
-              onSubmit={formSubmit}
-              resolver={zodResolver(validationSchema)}
-              defaultValues={{
-                package_name: "",
-                package_price: "",
-                duration: "",
-                no_of_domains: "",
-                short_description: "",
-                description: "",
-                savings: "",
-                status: "",
-              }}
-            >
-              <div className="md:w-11/12 w-full mx-auto">
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Package Name
-                  </p>
-                  <InputField
-                    name="package_name"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Package Name"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Package Price
-                  </p>
-                  <InputField
-                    name="package_price"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Package Price"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Package Duration
-                  </p>
-                  <InputField
-                    name="duration"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Package Duration"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    No of domains
-                  </p>
-                  <InputField
-                    name="no_of_domains"
-                    type="text"
-                    className="px-4"
-                    placeholder="10%"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Sort Description
-                  </p>
-                  <InputField
-                    name="short_description"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Descriptin"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Description
-                  </p>
-                  <InputField
-                    name="description"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Descriptin"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Savings</p>
-                  <InputField
-                    name="savings"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Descriptin"
-                  />
-                </div>
+            {planEditData ? (
+              <Form
+                onSubmit={formSubmit}
+                resolver={zodResolver(validationSchema)}
+                defaultValues={{
+                  package_name: package_name || "",
+                  package_price: package_price || "",
+                  duration: duration || "",
+                  no_of_domains: no_of_domains || "",
+                  short_description: short_description || "",
+                  description: description || "",
+                  savings: savings || "",
+                  status: status || "",
+                }}
+              >
+                <div className="md:w-11/12 w-full mx-auto">
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Package Name
+                    </p>
+                    <InputField
+                      name="package_name"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Package Price
+                    </p>
+                    <InputField
+                      name="package_price"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Package Duration
+                    </p>
+                    <InputField name="duration" type="text" className="px-4" />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      No of domains
+                    </p>
+                    <InputField
+                      name="no_of_domains"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Sort Description
+                    </p>
+                    <InputField
+                      name="short_description"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Description
+                    </p>
+                    <InputField
+                      name="description"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">Savings</p>
+                    <InputField name="savings" type="text" className="px-4" />
+                  </div>
 
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Status</p>
-                  <SelectField
-                    name="status"
-                    options={option}
-                    placeholder="Please select an option"
-                    type="string"
-                    required
-                  />
-                </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">Status</p>
+                    <SelectField
+                      name="status"
+                      options={option}
+                      placeholder="Please select an option"
+                      type="string"
+                      required
+                    />
+                  </div>
 
-                <div className="w-full mt-6 border border-slate-300 rounded-lg">
-                  {loading ? (
-                    <LoaingAnimation size={30} color="#36d7b7" />
-                  ) : (
-                    <LoadingButton className="w-full">Submit</LoadingButton>
-                  )}
+                  <div className="w-full mt-6 border border-slate-300 rounded-lg">
+                    {loading ? (
+                      <LoaingAnimation size={30} color="#36d7b7" />
+                    ) : (
+                      <LoadingButton className="w-full">Submit</LoadingButton>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Form>
+              </Form>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

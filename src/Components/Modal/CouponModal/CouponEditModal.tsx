@@ -34,6 +34,7 @@ const CouponEditModal = ({
   getData,
   editCoupon,
 }: IProps) => {
+  const { coupon_name, validity, percentage, visible_status } = editCoupon;
   const [loading, setLoading] = useState<boolean>(false);
   const formSubmit: SubmitHandler<FieldValues> = async (couponData) => {
     setLoading(true);
@@ -91,7 +92,7 @@ const CouponEditModal = ({
             ? " opacity-100 fixed bg-[#07070745] w-full h-screen z-[100] right-0 top-0 bottom-0 m-auto "
             : "opacity-0 -z-50"
         }`}
-        onClick={() => handleModal("0")}
+        onClick={() => handleModal("")}
       ></div>
       <div
         className={`fixed  md:w-2/5 w-full h-fit m-auto right-0 left-0 top-0 rounded px-3 ${
@@ -104,72 +105,79 @@ const CouponEditModal = ({
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
             <h4>Update Coupon</h4>
             <RxCross1
-              onClick={() => handleModal("0")}
+              onClick={() => handleModal("")}
               className="cursor-pointer hover:scale-105"
             />
           </div>
           <div className="px-5 pb-10 pt-8 max-h-[500px] overflow-auto">
-            <Form
-              onSubmit={formSubmit}
-              resolver={zodResolver(validationSchema)}
-              defaultValues={{
-                coupon_name: "",
-                percentage: "",
-                validity: "",
-                visible_status: "",
-              }}
-            >
-              <div className="md:w-11/12 w-full mx-auto">
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Name
-                  </p>
-                  <InputField name="coupon_name" type="text" className="px-4" />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Validity (Days)
-                  </p>
-                  <InputField
-                    name="validity"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Package Price"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Percentage
-                  </p>
-                  <InputField
-                    name="percentage"
-                    type="number"
-                    className="px-4"
-                    placeholder="%"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Status
-                  </p>
-                  <SelectField
-                    name="visible_status"
-                    options={option}
-                    placeholder="Please select an option"
-                    type="string"
-                    required
-                  />
-                </div>
+            {editCoupon ? (
+              <Form
+                onSubmit={formSubmit}
+                resolver={zodResolver(validationSchema)}
+                defaultValues={{
+                  coupon_name: coupon_name,
+                  percentage: percentage,
+                  validity: validity,
+                  visible_status: visible_status,
+                }}
+              >
+                <div className="md:w-11/12 w-full mx-auto">
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Coupon Name
+                    </p>
+                    <InputField
+                      name="coupon_name"
+                      type="text"
+                      className="px-4"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Coupon Validity (Days)
+                    </p>
+                    <InputField
+                      name="validity"
+                      type="text"
+                      className="px-4"
+                      placeholder="Enter Your Package Price"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Coupon Percentage
+                    </p>
+                    <InputField
+                      name="percentage"
+                      type="number"
+                      className="px-4"
+                      placeholder="%"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Coupon Status
+                    </p>
+                    <SelectField
+                      name="visible_status"
+                      options={option}
+                      type="string"
+                      required
+                    />
+                  </div>
 
-                <div className="w-full mt-6 border border-slate-300 rounded-lg">
-                  {loading ? (
-                    <LoaingAnimation size={30} color="#36d7b7" />
-                  ) : (
-                    <LoadingButton className="w-full">Submit</LoadingButton>
-                  )}
+                  <div className="w-full mt-6 border border-slate-300 rounded-lg">
+                    {loading ? (
+                      <LoaingAnimation size={30} color="#36d7b7" />
+                    ) : (
+                      <LoadingButton className="w-full">Submit</LoadingButton>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Form>
+              </Form>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

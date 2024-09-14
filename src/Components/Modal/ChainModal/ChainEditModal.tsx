@@ -29,6 +29,7 @@ export type IProps = {
   editChain?: any;
 };
 const ChainEditModal = ({ handleModal, modal, getData, editChain }: IProps) => {
+  const { rpc_chain, chain_id, status, chain_symbol } = editChain;
   const [loading, setLoading] = useState<boolean>(false);
   const formSubmit: SubmitHandler<FieldValues> = async (chainData) => {
     setLoading(true);
@@ -51,7 +52,6 @@ const ChainEditModal = ({ handleModal, modal, getData, editChain }: IProps) => {
           ...chainData,
           id: editChain?.id,
         });
-        console.log(response);
         if (response?.data?.success === 200) {
           Swal.fire({
             title: "Update",
@@ -87,7 +87,7 @@ const ChainEditModal = ({ handleModal, modal, getData, editChain }: IProps) => {
             ? " opacity-100 fixed bg-[#07070745] w-full h-screen z-[100] right-0 top-0 bottom-0 m-auto "
             : "opacity-0 -z-50"
         }`}
-        onClick={() => handleModal("0")}
+        onClick={() => handleModal("")}
       ></div>
       <div
         className={`fixed  md:w-2/5 w-full h-fit m-auto right-0 left-0 top-0 rounded px-3 ${
@@ -100,80 +100,88 @@ const ChainEditModal = ({ handleModal, modal, getData, editChain }: IProps) => {
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
             <h4>Update Coupon</h4>
             <RxCross1
-              onClick={() => handleModal("0")}
+              onClick={() => handleModal("")}
               className="cursor-pointer hover:scale-105"
             />
           </div>
           <div className="px-5 pb-10 pt-8 max-h-[500px] overflow-auto">
-            <Form
-              onSubmit={formSubmit}
-              resolver={zodResolver(validationSchema)}
-              defaultValues={{
-                rpc_chain: "",
-                chain_id: "",
-                status: "",
-                chain_symbol: "",
-              }}
-            >
-              <div className="md:w-11/12 w-full mx-auto">
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">RPC Chain</p>
-                  <InputField
-                    name="rpc_chain"
-                    type="text"
-                    className="px-4"
-                    placeholder="rpc chain"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Chain Symbol
-                  </p>
-                  <InputField
-                    name="chain_symbol"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Package Price"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Chain Id</p>
-                  <InputField
-                    name="chain_id"
-                    type="number"
-                    className="px-4"
-                    placeholder="%"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Status</p>
-                  <SelectField
-                    name="status"
-                    options={option}
-                    placeholder="Please select an option"
-                    type="string"
-                    required
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Images</p>
-                  <InputField
-                    name="image"
-                    type="file"
-                    className="px-4"
-                    placeholder="%"
-                  />
-                </div>
+            {editChain ? (
+              <Form
+                onSubmit={formSubmit}
+                resolver={zodResolver(validationSchema)}
+                defaultValues={{
+                  rpc_chain: rpc_chain,
+                  chain_id: chain_id,
+                  status: status,
+                  chain_symbol: chain_symbol,
+                }}
+              >
+                <div className="md:w-11/12 w-full mx-auto">
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      RPC Chain
+                    </p>
+                    <InputField
+                      name="rpc_chain"
+                      type="text"
+                      className="px-4"
+                      placeholder="rpc chain"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Chain Symbol
+                    </p>
+                    <InputField
+                      name="chain_symbol"
+                      type="text"
+                      className="px-4"
+                      placeholder="Enter Your Package Price"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Chain Id
+                    </p>
+                    <InputField
+                      name="chain_id"
+                      type="number"
+                      className="px-4"
+                      placeholder="%"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">Status</p>
+                    <SelectField
+                      name="status"
+                      options={option}
+                      placeholder="Please select an option"
+                      type="string"
+                      required
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">Images</p>
+                    <InputField
+                      name="image"
+                      type="file"
+                      className="px-4"
+                      placeholder="%"
+                    />
+                  </div>
 
-                <div className="w-full mt-6 border border-slate-300 rounded-lg">
-                  {loading ? (
-                    <LoaingAnimation size={30} color="#36d7b7" />
-                  ) : (
-                    <LoadingButton className="w-full">Submit</LoadingButton>
-                  )}
+                  <div className="w-full mt-6 border border-slate-300 rounded-lg">
+                    {loading ? (
+                      <LoaingAnimation size={30} color="#36d7b7" />
+                    ) : (
+                      <LoadingButton className="w-full">Submit</LoadingButton>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Form>
+              </Form>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

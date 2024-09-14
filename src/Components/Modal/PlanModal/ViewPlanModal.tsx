@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 
 export type IProps = {
@@ -8,7 +7,6 @@ export type IProps = {
 };
 
 const ViewPlanModal = ({ handleModal, modal, viewPlanData }: IProps) => {
-  console.log(viewPlanData?.description);
   return (
     <div className="w-full">
       <div

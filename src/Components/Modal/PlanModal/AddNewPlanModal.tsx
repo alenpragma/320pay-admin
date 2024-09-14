@@ -147,7 +147,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                     name="short_description"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Descriptin"
+                    placeholder="Enter Your Short Descriptin"
                   />
                 </div>
                 <div className="relative mb-4">

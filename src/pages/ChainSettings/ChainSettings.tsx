@@ -7,6 +7,8 @@ import AddNewChainModal from "../../Components/Modal/ChainModal/AddNewChainModal
 import axiosInstance from "../../utils/axiosConfig";
 import Swal from "sweetalert2";
 import ChainEditModal from "../../Components/Modal/ChainModal/ChainEditModal";
+import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
+import Skeleton from "react-loading-skeleton";
 
 const ChainSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -33,47 +35,10 @@ const ChainSettings = () => {
       setLoading(false);
     }
   };
-  const handleDelete = async (deletingId: string) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to undo this action!",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Delete",
-      cancelButtonText: "Cancel",
-      customClass: {
-        popup: "custom-swal-modal",
-      },
-    });
 
-    if (result.isConfirmed) {
-      try {
-        const response = await axiosInstance.get(
-          `/rpc-url/delete/${deletingId}`
-        );
-        if (response?.data?.success === 200) {
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success",
-            customClass: {
-              popup: "custom-swal-modal",
-            },
-          });
-          getData();
-        }
-      } catch (error) {
-        Swal.fire({
-          title: "Error!",
-          text: "There was a problem deleting your file.",
-          icon: "error",
-          customClass: {
-            popup: "custom-swal-modal",
-          },
-        });
-      }
-    }
+  const handleDelete = (deleteId: string) => {
+    const url = `/rpc-url/delete/${deleteId}`;
+    handleDeleteFn(url, getData);
   };
   useEffect(() => {
     getData();
@@ -91,74 +56,92 @@ const ChainSettings = () => {
         getData={getData}
         editChain={editChain}
       />
-      <div className="py-5 px-3">
-        <div className="w-full flex justify-end">
-          <button
-            onClick={handleModal}
-            className="px-4 py-1 bg-primary rounded-lg text-white font-medium"
-          >
-            Add New Chain
-          </button>
+      {loading ? (
+        <div className="mt-5">
+          <Skeleton height={50} count={7} />
         </div>
-        <TableBody>
-          <table className=" border-collapse w-full">
-            <thead>
-              <tr className="bg-[#e2e2e965] text-cslate rounded-tl-lg">
-                <th className="py-2 px-6 text-start rounded-tl-lg ">
-                  Package Name
-                </th>
-                <th className="py-2 px-6 text-start text-nowrap">
-                  Chain Symbol
-                </th>
-                <th className="py-2 px-6 text-start  text-nowrap">Chain ID</th>
-                <th className="py-2 px-6 text-start  text-nowrap">
-                  Chain Logo
-                </th>
-                <th className="py-2 px-6 text-start  text-nowrap">Status</th>
-                <th className="py-2 px-6 text-start  text-nowrap">Action</th>
-              </tr>
-            </thead>
+      ) : (
+        <>
+          {chain.length !== 0 ? (
+            <div className="py-5 px-3">
+              <div className="w-full flex justify-end">
+                <button
+                  onClick={handleModal}
+                  className="px-4 py-1 bg-primary rounded-lg text-white font-medium"
+                >
+                  Add New Chain
+                </button>
+              </div>
+              <TableBody>
+                <table className=" border-collapse w-full">
+                  <thead>
+                    <tr className="bg-[#e2e2e965] text-cslate rounded-tl-lg">
+                      <th className="py-2 px-6 text-start rounded-tl-lg ">
+                        Package Name
+                      </th>
+                      <th className="py-2 px-6 text-start text-nowrap">
+                        Chain Symbol
+                      </th>
+                      <th className="py-2 px-6 text-start  text-nowrap">
+                        Chain ID
+                      </th>
+                      <th className="py-2 px-6 text-start  text-nowrap">
+                        Chain Logo
+                      </th>
+                      <th className="py-2 px-6 text-start  text-nowrap">
+                        Status
+                      </th>
+                      <th className="py-2 px-6 text-start  text-nowrap">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
 
-            <tbody className="bg-white">
-              {chain?.map((item: any) => (
-                <tr key={item.id}>
-                  <TData className="px-6">{item?.rpc_chain}</TData>
-                  <TData className="px-6">{item?.chain_symbol}</TData>
-                  <TData className="px-6">{item?.chain_id}</TData>
-                  <TData className="px-6">
-                    <div className="size-8  rounded-full">
-                      <img src={item?.image} alt="" />
-                    </div>
-                  </TData>
-                  <TData className="px-6">
-                    {item?.status !== "1" ? (
-                      <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
-                        <span>Deactive</span>
-                      </div>
-                    ) : (
-                      <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
-                        <span>Active</span>
-                      </div>
-                    )}
-                  </TData>
-                  <TData className="px-6">
-                    <div className="flex items-center gap-3">
-                      <FiEdit
-                        onClick={() => handleEditModal(item)}
-                        className="size-5 text-primary cursor-pointer"
-                      />{" "}
-                      <RiDeleteBin6Line
-                        onClick={() => handleDelete(item?.id)}
-                        className="size-5 text-red-500 cursor-pointer"
-                      />
-                    </div>
-                  </TData>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </TableBody>
-      </div>
+                  <tbody className="bg-white">
+                    {chain?.map((item: any) => (
+                      <tr key={item.id}>
+                        <TData className="px-6">{item?.rpc_chain}</TData>
+                        <TData className="px-6">{item?.chain_symbol}</TData>
+                        <TData className="px-6">{item?.chain_id}</TData>
+                        <TData className="px-6">
+                          <div className="size-8  rounded-full">
+                            <img src={item?.image} alt="" />
+                          </div>
+                        </TData>
+                        <TData className="px-6">
+                          {item?.status !== "1" ? (
+                            <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
+                              <span>Deactive</span>
+                            </div>
+                          ) : (
+                            <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
+                              <span>Active</span>
+                            </div>
+                          )}
+                        </TData>
+                        <TData className="px-6">
+                          <div className="flex items-center gap-3">
+                            <FiEdit
+                              onClick={() => handleEditModal(item)}
+                              className="size-5 text-primary cursor-pointer"
+                            />{" "}
+                            <RiDeleteBin6Line
+                              onClick={() => handleDelete(item?.id)}
+                              className="size-5 text-red-500 cursor-pointer"
+                            />
+                          </div>
+                        </TData>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </TableBody>
+            </div>
+          ) : (
+            <p className="mt-5">No Data</p>
+          )}
+        </>
+      )}
     </>
   );
 };
