@@ -17,25 +17,20 @@ export const option = [
 ];
 
 export const validationSchema = z.object({
-  coupon_name: z.string().min(1, "This field is required"),
-  validity: z.string().min(1, "This field is required"),
-  percentage: z.string().min(1, "This field is required"),
-  visible_status: z.string().min(1, "This field is required"),
+  rpc_chain: z.string().min(1, "This field is required"),
+  chain_id: z.string().min(1, "This field is required"),
+  status: z.string().min(1, "This field is required"),
+  chain_symbol: z.string().min(1, "This field is required"),
 });
 export type IProps = {
   modal: boolean;
   handleModal: (id: string) => void;
   getData: any;
-  editCoupon?: any;
+  editChain?: any;
 };
-const CouponEditModal = ({
-  handleModal,
-  modal,
-  getData,
-  editCoupon,
-}: IProps) => {
+const ChainEditModal = ({ handleModal, modal, getData, editChain }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const formSubmit: SubmitHandler<FieldValues> = async (couponData) => {
+  const formSubmit: SubmitHandler<FieldValues> = async (chainData) => {
     setLoading(true);
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -52,10 +47,11 @@ const CouponEditModal = ({
 
     if (result.isConfirmed) {
       try {
-        const response = await axiosInstance.post(`/coupon/update`, {
-          ...couponData,
-          id: editCoupon?.id,
+        const response = await axiosInstance.post(`/rpc-url/update`, {
+          ...chainData,
+          id: editChain?.id,
         });
+        console.log(response);
         if (response?.data?.success === 200) {
           Swal.fire({
             title: "Update",
@@ -113,51 +109,59 @@ const CouponEditModal = ({
               onSubmit={formSubmit}
               resolver={zodResolver(validationSchema)}
               defaultValues={{
-                coupon_name: "",
-                percentage: "",
-                validity: "",
-                visible_status: "",
+                rpc_chain: "",
+                chain_id: "",
+                status: "",
+                chain_symbol: "",
               }}
             >
               <div className="md:w-11/12 w-full mx-auto">
                 <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Name
-                  </p>
-                  <InputField name="coupon_name" type="text" className="px-4" />
+                  <p className="font-semibold text-secondary mb-1">RPC Chain</p>
+                  <InputField
+                    name="rpc_chain"
+                    type="text"
+                    className="px-4"
+                    placeholder="rpc chain"
+                  />
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Coupon Validity (Days)
+                    Chain Symbol
                   </p>
                   <InputField
-                    name="validity"
+                    name="chain_symbol"
                     type="text"
                     className="px-4"
                     placeholder="Enter Your Package Price"
                   />
                 </div>
                 <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Percentage
-                  </p>
+                  <p className="font-semibold text-secondary mb-1">Chain Id</p>
                   <InputField
-                    name="percentage"
+                    name="chain_id"
                     type="number"
                     className="px-4"
                     placeholder="%"
                   />
                 </div>
                 <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Coupon Status
-                  </p>
+                  <p className="font-semibold text-secondary mb-1">Status</p>
                   <SelectField
-                    name="visible_status"
+                    name="status"
                     options={option}
                     placeholder="Please select an option"
                     type="string"
                     required
+                  />
+                </div>
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">Images</p>
+                  <InputField
+                    name="image"
+                    type="file"
+                    className="px-4"
+                    placeholder="%"
                   />
                 </div>
 
@@ -177,4 +181,4 @@ const CouponEditModal = ({
   );
 };
 
-export default CouponEditModal;
+export default ChainEditModal;

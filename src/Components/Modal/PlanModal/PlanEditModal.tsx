@@ -1,14 +1,22 @@
 import { RxCross1 } from "react-icons/rx";
 import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import SelectField from "../../Forms/SelecetField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useState } from "react";
+import { boolean, z } from "zod";
+import { useEffect, useState } from "react";
+import Loading from "../../Lottie/Loading";
 import axiosInstance from "../../../utils/axiosConfig";
+import { toast } from "react-toastify";
 import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import Swal from "sweetalert2";
+
+export const option = [
+  { label: "Deactive", value: "0" },
+  { label: "Active", value: "1" },
+];
 
 export const validationSchema = z.object({
   package_name: z.string().min(1, "select any network"),
@@ -18,40 +26,63 @@ export const validationSchema = z.object({
   short_description: z.string().min(1, "select any network"),
   description: z.string().min(1, "select any network"),
   savings: z.string().min(1, "select any network"),
+  status: z.string().min(1, "select any network"),
 });
 export type IProps = {
   modal: boolean;
-  handleModal: () => void;
+  handleModal: (e: string) => void;
   getData: () => void;
+  planEditData: any;
 };
-const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
+const PlanEditModal = ({ handleModal, modal, getData, planEditData }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const formSubmit: SubmitHandler<FieldValues> = async (planData) => {
+  const formSubmit: SubmitHandler<FieldValues> = async (couponData) => {
     setLoading(true);
-    try {
-      const response = await axiosInstance.post("package/store", planData);
-      if (response.data.success == 200) {
-        setLoading(false);
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be update data?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Update",
+      cancelButtonText: "Cancel",
+      customClass: {
+        popup: "custom-swal-modal",
+      },
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axiosInstance.post(`/package/update`, {
+          ...couponData,
+          id: planEditData?.id,
+        });
+        if (response?.data?.success === 200) {
+          Swal.fire({
+            title: "Update",
+            text: "Your data has been updated",
+            icon: "success",
+            customClass: {
+              popup: "custom-swal-modal",
+            },
+          });
+          handleModal("");
+          setLoading(false);
+        }
+        getData();
+      } catch (error) {
         Swal.fire({
-          title: "Plan add successfully",
-          icon: "success",
+          title: "Error!",
+          text: "something wont worng",
+          icon: "error",
           customClass: {
             popup: "custom-swal-modal",
           },
         });
         getData();
+        setLoading(false);
       }
-      handleModal();
-    } catch (error) {
-      Swal.fire({
-        title: "Something Wrong",
-        icon: "error",
-        customClass: {
-          popup: "custom-swal-modal",
-        },
-      });
-      setLoading(false);
     }
   };
 
@@ -63,7 +94,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
             ? " opacity-100 fixed bg-[#07070745] w-full h-screen z-[100] right-0 top-0 bottom-0 m-auto"
             : "opacity-0 -z-50"
         }`}
-        onClick={handleModal}
+        onClick={() => handleModal("")}
       ></div>
       <div
         className={`fixed  md:w-2/5 w-full h-fit m-auto right-0 left-0 top-0 rounded px-3 ${
@@ -76,7 +107,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
             <h4> Add New Plan</h4>
             <RxCross1
-              onClick={handleModal}
+             onClick={() => handleModal("")}
               className="cursor-pointer hover:scale-105"
             />
           </div>
@@ -92,6 +123,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                 short_description: "",
                 description: "",
                 savings: "",
+                status: "",
               }}
             >
               <div className="md:w-11/12 w-full mx-auto">
@@ -112,7 +144,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                   </p>
                   <InputField
                     name="package_price"
-                    type="number"
+                    type="text"
                     className="px-4"
                     placeholder="Enter Your Package Price"
                   />
@@ -123,7 +155,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                   </p>
                   <InputField
                     name="duration"
-                    type="number"
+                    type="text"
                     className="px-4"
                     placeholder="Enter Your Package Duration"
                   />
@@ -134,7 +166,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                   </p>
                   <InputField
                     name="no_of_domains"
-                    type="number"
+                    type="text"
                     className="px-4"
                     placeholder="10%"
                   />
@@ -158,16 +190,27 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                     name="description"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Description"
+                    placeholder="Enter Your Descriptin"
                   />
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">Savings</p>
                   <InputField
                     name="savings"
-                    type="number"
+                    type="text"
                     className="px-4"
-                    placeholder="Your savings"
+                    placeholder="Enter Your Descriptin"
+                  />
+                </div>
+
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">Status</p>
+                  <SelectField
+                    name="status"
+                    options={option}
+                    placeholder="Please select an option"
+                    type="string"
+                    required
                   />
                 </div>
 
@@ -187,4 +230,4 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
   );
 };
 
-export default AddNewPlanModal;
+export default PlanEditModal;

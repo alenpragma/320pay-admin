@@ -54,53 +54,49 @@ type TInputProps = {
   className?: string;
   placeholder?: string;
   required?: boolean;
-  defaultValue?: string | number;
+  // defaultValue?: string;
   maxlength?: number;
 };
 
 const InputField = ({
   name,
-  type = "text", // Set default type as 'text'
-  className = "", // Set default className as an empty string
+  type,
+  className,
   placeholder,
-  defaultValue,
+  // defaultValue,
   required,
   maxlength,
 }: TInputProps) => {
   const { control } = useFormContext();
   return (
     <Controller
-      control={control}
-      name={name}
-      defaultValue={defaultValue}
-      render={({ field, fieldState: { error } }) => (
-        <div className={`${type === "checkbox" ? "flex flex-col" : ""}`}>
-          <input
-            {...field}
-            type={type}
-            className={`w-full border border-[#E2E2E9] focus:outline focus:outline-slate-500 rounded-md py-1 ${className}`}
-            placeholder={placeholder}
-            required={required}
-            maxLength={maxlength}
-            onKeyDown={(e) => {
-              if (type === "number") {
-                if (
-                  e.key === "e" ||
-                  e.key === "E" ||
-                  e.key === "+" ||
-                  e.key === "-"
-                ) {
-                  e.preventDefault();
-                }
+    control={control}
+    name={name}
+    // defaultValue={defaultValue}
+    render={({ field, fieldState: { error } }) => (
+      <div className={`${type === "checkbox" ? "flex flex-col" : ""}`}>
+        <input
+          {...field}
+          type={type}
+          className={`w-full border border-[#E2E2E9] focus:outline focus:outline-slate-500 rounded-md py-1 ${className}`}
+          placeholder={placeholder}
+          required={required}
+          maxLength={maxlength}
+          onKeyDown={(e) => {
+            if (type === "number") {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
               }
-            }}
-          />
-          {error && type !== "checkbox" && (
-            <span className="text-[#e82828] text-[14px]">{error.message}</span>
-          )}
-        </div>
-      )}
-    />
+            }
+          }}
+        />
+        {error && type !== "checkbox" && (
+          <span className="text-[#e82828] text-[14px]">{error.message}</span>
+        )}
+      </div>
+    )}
+  />
+  
   );
 };
 

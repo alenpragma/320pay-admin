@@ -128,7 +128,7 @@ const PaymenModal = ({ handleRenewModal, renewModal }: IModal) => {
                 network: undefined,
               }}
             >
-              <div className="md:w-10/12 w-full mx-auto">
+              <div className="md:w-11/12 w-full mx-auto">
                 <div className="relative mb-8">
                   <p className="font-semibold text-secondary mb-2">
                     Choose Network

@@ -12,7 +12,7 @@ const TData = ({ data, children, className }: TDataType) => {
       className={`py-2  text-start text-[16px] text-[#868B8F] whitespace-nowrap ${className}`}
     >
       <h4>{data}</h4>
-      <p>{children}</p>
+      <div>{children}</div>
     </td>
   );
 };
