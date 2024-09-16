@@ -18,7 +18,7 @@ interface FormData {
   rpc_chain: string;
   chain_symbol: string;
   chain_id: number;
-  image: FileList; // Use FileList for file input
+  image: FileList;
 }
 
 const AddNewChainModal = ({ handleModal, modal, getData }: IProps) => {
@@ -32,15 +32,14 @@ const AddNewChainModal = ({ handleModal, modal, getData }: IProps) => {
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (chainData) => {
-    console.log(chainData);
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("rpc_chain", chainData.rpc_chain);
       formData.append("chain_symbol", chainData.chain_symbol);
-      formData.append("chain_id", chainData.chain_id.toString()); // Convert number to string
+      formData.append("chain_id", chainData.chain_id.toString()); 
       if (chainData.image.length > 0) {
-        formData.append("image", chainData.image[0]); // Append file
+        formData.append("image", chainData.image[0]); 
       }
       const response = await axiosInstance.post("/rpc-url/store", formData);
       if (response?.status === 200) {

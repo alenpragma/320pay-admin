@@ -28,6 +28,7 @@ import AllUser from "../pages/AllUser/AllUser";
 import PlanSettings from "../pages/PlanSettings/PlanSettings";
 import ChainSettings from "../pages/ChainSettings/ChainSettings";
 import CouponSettings from "../pages/CouponSettings/CouponSettings";
+import TokenSettings from "../pages/TokenSettings/TokenSettings";
 
 const routes = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const routes = createBrowserRouter([
       {
         path: "settings/coupon",
         element: <CouponSettings />,
+      },
+      {
+        path: "settings/token",
+        element: <TokenSettings />,
       },
       // {
       //   path: "start-here",

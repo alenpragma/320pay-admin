@@ -3,12 +3,10 @@ import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
-import axiosInstance from "../../../utils/axiosConfig";
 import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
-import Swal from "sweetalert2";
+import { usePostAction } from "../../../utils/PostAction/PostAction";
 
 export const validationSchema = z.object({
   package_name: z.string().min(1, "select any network"),
@@ -19,42 +17,22 @@ export const validationSchema = z.object({
   description: z.string().min(1, "select any network"),
   savings: z.string().min(1, "select any network"),
 });
+
 export type IProps = {
   modal: boolean;
   handleModal: () => void;
-  getData: () => void;
+  refetch: () => void;
 };
-const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const formSubmit: SubmitHandler<FieldValues> = async (planData) => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.post("package/store", planData);
-      if (response.data.success == 200) {
-        setLoading(false);
-        Swal.fire({
-          title: "Plan add successfully",
-          icon: "success",
-          customClass: {
-            popup: "custom-swal-modal",
-          },
-        });
-        getData();
-      }
-      handleModal();
-    } catch (error) {
-      Swal.fire({
-        title: "Something Wrong",
-        icon: "error",
-        customClass: {
-          popup: "custom-swal-modal",
-        },
-      });
-      setLoading(false);
-    }
+const AddNewPlanModal = ({ handleModal, modal, refetch }: IProps) => {
+  const { mutate, isPending } = usePostAction(
+    "package/store",
+    refetch,
+    handleModal
+  );
+  const formSubmit: SubmitHandler<FieldValues> = (postData) => {
+    mutate(postData);
   };
-
   return (
     <div className="w-full">
       <div
@@ -74,7 +52,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
       >
         <div className="w-full h-full rounded bg-[#ffffff] ">
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
-            <h4> Add New Plan</h4>
+            <h4>Add New Plan</h4>
             <RxCross1
               onClick={handleModal}
               className="cursor-pointer hover:scale-105"
@@ -95,6 +73,7 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
               }}
             >
               <div className="md:w-11/12 w-full mx-auto">
+                {/* Form Fields */}
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
                     Package Name
@@ -141,13 +120,13 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Sort Description
+                    Short Description
                   </p>
                   <InputField
                     name="short_description"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Short Descriptin"
+                    placeholder="Enter Your Short Description"
                   />
                 </div>
                 <div className="relative mb-4">
@@ -170,9 +149,8 @@ const AddNewPlanModal = ({ handleModal, modal, getData }: IProps) => {
                     placeholder="Your savings"
                   />
                 </div>
-
                 <div className="w-full mt-6 border border-slate-300 rounded-lg">
-                  {loading ? (
+                  {isPending ? (
                     <LoaingAnimation size={30} color="#36d7b7" />
                   ) : (
                     <LoadingButton className="w-full">Submit</LoadingButton>

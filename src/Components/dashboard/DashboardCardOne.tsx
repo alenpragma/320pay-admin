@@ -105,7 +105,7 @@ const DashboardCardOne = ({ clientProfile, totalBalance }: any) => {
           <div className="flex items-center gap-5 pt-8 md:pt-0 w-full">
             <div className="w-fit">
               <div className="md:size-[70px] size-[32px] bg-[#E8E2FD] flex justify-center items-center rounded-full">
-                <img className=" md:size-[40px]" src={images.wallet1} alt="" />
+                <img className=" md:size-[40px]" src={images.wallet2} alt="" />
               </div>
             </div>
             <div className="flex flex-col items-start justify-between w-full">
