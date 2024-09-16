@@ -180,6 +180,13 @@ export const submenuItem: MenuInterface[] = [
     icon1: withdraw1,
     icon2: withdraw1Hover,
   },
+  {
+    id: 313,
+    pathname: "settings/token",
+    item: "Token Settings",
+    icon1: withdraw1,
+    icon2: withdraw1Hover,
+  },
 ]
 export const dashboardCard: CadeInterface[] = [
   {

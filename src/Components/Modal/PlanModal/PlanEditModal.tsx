@@ -3,15 +3,13 @@ import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import SelectField from "../../Forms/SelecetField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { boolean, z } from "zod";
-import { useEffect, useState } from "react";
-import Loading from "../../Lottie/Loading";
-import axiosInstance from "../../../utils/axiosConfig";
-import { toast } from "react-toastify";
+import { z } from "zod";
+
 import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import Swal from "sweetalert2";
+import { usePostAction } from "../../../utils/PostAction/PostAction";
 
 export const option = [
   { label: "Deactive", value: "0" },
@@ -31,13 +29,13 @@ export const validationSchema = z.object({
 export type IProps = {
   modal: boolean;
   handleModal: (e: string) => void;
-  getData: () => void;
+  refetch: () => void;
   planEditData: any;
 };
 const PlanEditModal = ({
   handleModal,
   modal,
-  getData,
+  refetch,
   planEditData,
 }: IProps) => {
   const {
@@ -50,10 +48,14 @@ const PlanEditModal = ({
     savings,
     status,
   } = planEditData;
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const formSubmit: SubmitHandler<FieldValues> = async (couponData) => {
-    setLoading(true);
+  const { mutate, isPending } = usePostAction(
+    "package/update",
+    refetch,
+    handleModal
+  );
+
+  const formSubmit: SubmitHandler<FieldValues> = async (planEdit) => {
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be update data?",
@@ -66,38 +68,8 @@ const PlanEditModal = ({
         popup: "custom-swal-modal",
       },
     });
-
     if (result.isConfirmed) {
-      try {
-        const response = await axiosInstance.post(`/package/update`, {
-          ...couponData,
-          id: planEditData?.id,
-        });
-        if (response?.data?.success === 200) {
-          Swal.fire({
-            title: "Update",
-            text: "Your data has been updated",
-            icon: "success",
-            customClass: {
-              popup: "custom-swal-modal",
-            },
-          });
-          handleModal("");
-          setLoading(false);
-        }
-        getData();
-      } catch (error) {
-        Swal.fire({
-          title: "Error!",
-          text: "something wont worng",
-          icon: "error",
-          customClass: {
-            popup: "custom-swal-modal",
-          },
-        });
-        getData();
-        setLoading(false);
-      }
+      mutate({ ...planEdit, id: planEditData?.id });
     }
   };
 
@@ -216,7 +188,7 @@ const PlanEditModal = ({
                   </div>
 
                   <div className="w-full mt-6 border border-slate-300 rounded-lg">
-                    {loading ? (
+                    {isPending ? (
                       <LoaingAnimation size={30} color="#36d7b7" />
                     ) : (
                       <LoadingButton className="w-full">Submit</LoadingButton>

@@ -3,14 +3,19 @@ import TableBody from "../../Components/TableBody/TableBody";
 import { GoEye } from "react-icons/go";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import AddNewPlanModal from "../../Components/Modal/PlanModal/AddNewPlanModal";
 import ViewPlanModal from "../../Components/Modal/PlanModal/ViewPlanModal";
 import axiosInstance from "../../utils/axiosConfig";
 import PlanEditModal from "../../Components/Modal/PlanModal/PlanEditModal";
-import Swal from "sweetalert2";
 import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
 import Skeleton from "react-loading-skeleton";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchPlan = async () => {
+  const response = await axiosInstance.get("/packages");
+  return response;
+};
 
 const PlanSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -19,8 +24,6 @@ const PlanSettings = () => {
   const [planEditData, setPlanEditData] = useState("");
   const [viewPlanData, setViewPlanData] = useState("");
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [plans, setPlan] = useState([]);
   const handleModal = () => {
     setModal(!modal);
   };
@@ -33,50 +36,46 @@ const PlanSettings = () => {
     setPlanEditData(planData);
   };
 
-  const getData = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get("/packages");
-      setPlan(response.data[0]);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const { data: plans, isLoading, refetch } = useQuery({
+    queryKey: ["todos"],
+    queryFn: fetchPlan,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+  const plan = plans?.data[0]
+  
   const handleDelete = (deleteId: string) => {
     const url = `/package/delete/${deleteId}`;
-    handleDeleteFn(url, getData);
+    handleDeleteFn(url, refetch);
   };
-  useEffect(() => {
-    getData();
-  }, []);
+
   return (
     <>
       <AddNewPlanModal
         modal={modal}
         handleModal={handleModal}
-        getData={getData}
+        refetch={refetch}
       />
       <PlanEditModal
         modal={editModal}
         handleModal={handleEditModal}
-        getData={getData}
+        refetch={refetch}
         planEditData={planEditData}
       />
-      <ViewPlanModal
+      {/* <ViewPlanModal
         modal={viewPlan}
         handleModal={handleViewModal}
         viewPlanData={viewPlanData}
-      />
-
-      {loading ? (
+      /> */}
+      {isLoading ? (
         <div className="mt-5">
           <Skeleton height={50} count={7} />{" "}
         </div>
       ) : (
         <>
-          {plans.length !== 0 ? (
+          {plans?.data[0].length !== 0 ? (
             <div className="py-5 px-3">
               <div className="w-full flex justify-end">
                 <button
@@ -121,7 +120,7 @@ const PlanSettings = () => {
                   </thead>
 
                   <tbody className="bg-white">
-                    {plans?.map((plan: any) => (
+                    {plan?.map((plan: any) => (
                       <tr key={plan?.id}>
                         <TData className="px-6">{plan?.package_name}</TData>
                         <TData className="px-6">
