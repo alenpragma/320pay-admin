@@ -9,12 +9,17 @@ import Swal from "sweetalert2";
 import ChainEditModal from "../../Components/Modal/ChainModal/ChainEditModal";
 import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
 import Skeleton from "react-loading-skeleton";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchChain = async () => {
+  const response = await axiosInstance.get("/rpc-urls");
+  return response?.data[0];
+};
 
 const ChainSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
   const [editChainModal, setEditChainModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [chain, setChain] = useState([]);
   const [editChain, setEditChain] = useState<string>("");
   const [chainModal, setChainModal] = useState<boolean>(false);
   const handleModal = () => {
@@ -25,44 +30,43 @@ const ChainSettings = () => {
     setEditChain(chainData);
   };
 
-  const getData = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get("/rpc-urls");
-      setChain(response?.data[0]);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: chain,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["chain"],
+    queryFn: fetchChain,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
 
   const handleDelete = (deleteId: string) => {
     const url = `/rpc-url/delete/${deleteId}`;
-    handleDeleteFn(url, getData);
+    handleDeleteFn(url, refetch);
   };
-  useEffect(() => {
-    getData();
-  }, []);
   return (
     <>
       <AddNewChainModal
         modal={modal}
         handleModal={handleModal}
-        getData={getData}
+        refetch={refetch}
       />
       <ChainEditModal
         handleModal={handleEditModal}
         modal={chainModal}
-        getData={getData}
+        refetch={refetch}
         editChain={editChain}
       />
-      {loading ? (
+      {isLoading ? (
         <div className="mt-5">
           <Skeleton height={50} count={7} />
         </div>
       ) : (
         <>
-          {chain.length !== 0 ? (
+          {chain?.length !== 0 ? (
             <div className="py-5 px-3">
               <div className="w-full flex justify-end">
                 <button

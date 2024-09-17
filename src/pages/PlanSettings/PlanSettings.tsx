@@ -37,7 +37,7 @@ const PlanSettings = () => {
   };
 
   const { data: plans, isLoading, refetch } = useQuery({
-    queryKey: ["todos"],
+    queryKey: ["plans"],
     queryFn: fetchPlan,
     staleTime: 10000,
     refetchOnWindowFocus: false,
@@ -45,6 +45,7 @@ const PlanSettings = () => {
     retry: false,
   });
   const plan = plans?.data[0]
+  console.log(plan);
   
   const handleDelete = (deleteId: string) => {
     const url = `/package/delete/${deleteId}`;
@@ -64,11 +65,11 @@ const PlanSettings = () => {
         refetch={refetch}
         planEditData={planEditData}
       />
-      {/* <ViewPlanModal
+      <ViewPlanModal
         modal={viewPlan}
         handleModal={handleViewModal}
         viewPlanData={viewPlanData}
-      /> */}
+      />
       {isLoading ? (
         <div className="mt-5">
           <Skeleton height={50} count={7} />{" "}

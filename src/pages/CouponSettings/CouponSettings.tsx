@@ -2,58 +2,59 @@ import TData from "../../Components/Table/TData";
 import TableBody from "../../Components/TableBody/TableBody";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddNewCoupon from "../../Components/Modal/CouponModal/AddNewCoupon";
 import CouponEditModal from "../../Components/Modal/CouponModal/CouponEditModal";
 import axiosInstance from "../../utils/axiosConfig";
-import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
 import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchCoupon = async () => {
+  const response = await axiosInstance.get("/coupons");
+  return response;
+};
 
 const CouponSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
-  const [loading, setLoading] = useState(false);
   const [editCoupon, setEditCoupon] = useState<string>("");
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-  const [coupon, setCoupon] = useState([]);
   const handleModal = () => {
     setModal(!modal);
   };
   const handleEditModal = (data: string) => {
-    // console.log(id);
-    // setEditCoupon(!editCoupon);
     setEditCoupon(data);
     setShowEditModal(!showEditModal);
   };
-  const getData = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get("/coupons");
-      setCoupon(response?.data?.data);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
 
+  const {
+    data: coupons,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["coupons"],
+    queryFn: fetchCoupon,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+  const coupon = coupons?.data?.data;
   const handleDelete = (deleteId: string) => {
     const url = `/coupon/delete/${deleteId}`;
-    handleDeleteFn(url, getData);
+    handleDeleteFn(url, refetch);
   };
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <>
-      <AddNewCoupon modal={modal} handleModal={handleModal} getData={getData} />
+      <AddNewCoupon modal={modal} handleModal={handleModal} refetch={refetch} />
       <CouponEditModal
         modal={showEditModal}
         handleModal={handleEditModal}
-        getData={getData}
+        refetch={refetch}
         editCoupon={editCoupon}
       />
-      {loading ? (
+      {isLoading ? (
         <div className="mt-5">
           <Skeleton count={7} height={50} />{" "}
         </div>
@@ -95,13 +96,13 @@ const CouponSettings = () => {
                   </thead>
 
                   <tbody className="bg-white">
-                    {coupon.map((coup: any) => (
+                    {coupon?.map((coup: any) => (
                       <tr key={coup?.id}>
                         <TData className="px-6">{coup?.coupon_name}</TData>
                         <TData className="px-6">{coup?.coupon_code}</TData>
                         <TData className="px-6">
                           <span className="text-primary font-medium">
-                            {coup?.validity}
+                            {coup?.validity} days
                           </span>
                         </TData>
                         <TData className="px-6">{coup?.percentage}%</TData>

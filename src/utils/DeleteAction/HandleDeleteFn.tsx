@@ -22,7 +22,6 @@ export const handleDeleteFn = async (url: string, resetData: () => void) => {
       console.log(response);
       if (response?.data?.success === 200) {
         Swal.fire({
-          title: "Deleted!",
           text: "Your file has been deleted.",
           icon: "success",
           customClass: {
