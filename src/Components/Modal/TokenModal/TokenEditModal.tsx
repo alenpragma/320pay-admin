@@ -45,35 +45,8 @@ const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
       setImage(e.target.files[0]);
     }
   };
-  // const formSubmit: SubmitHandler<FieldValues> = async (tokenEdit) => {
-  //   console.log(tokenEdit);
-  //   const result = await Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be update data?",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Update",
-  //     cancelButtonText: "Cancel",
-  //     customClass: {
-  //       popup: "custom-swal-modal",
-  //     },
-  //   });
-  //   if (result.isConfirmed) {
-  //     const data = new FormData();
-  //     Object.keys(tokenEdit).forEach((key) => {
-  //       data.append(key, tokenEdit[key]);
-  //     });
-  //     if (image) {
-  //       data.append("image", image);
-  //     }
-  //     mutate({ data, id: editToken?.id });
-  //   }
-  // };
-
-
   const formSubmit: SubmitHandler<FieldValues> = async (tokenEdit) => {
-    console.log("Form Values:", tokenEdit);  // Check form values
+    console.log("Form Values:", tokenEdit); // Check form values
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to update data?",
@@ -94,10 +67,13 @@ const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
       if (image) {
         data.append("image", image);
       }
-      mutate({ data, id: editToken?.id });
+      if (editToken) {
+        data.append("id", editToken?.id);
+      }
+      mutate(data);
     }
   };
-  
+
   return (
     <div className="w-full">
       <div

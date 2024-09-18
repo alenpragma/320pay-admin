@@ -1,72 +1,73 @@
-import { MenuInterface } from "./types/menuType"
+import { MenuInterface } from "./types/menuType";
 
-import home from "./assets/icon/navIcon/home.svg"
-import homeHover from "./assets/icon/navIcon/home-hover.svg"
-import lighting from "./assets/icon/navIcon/lighting.svg"
-import lightingHover from "./assets/icon/navIcon/lightin-hover.svg"
-import wallet from "./assets/icon/navIcon/wallet.svg"
-import walletHover from "./assets/icon/navIcon/wallet-hover.svg"
-import filelock from "./assets/icon/navIcon/file-lock.svg"
-import filelockHover from "./assets/icon/navIcon/file-lock-hover.svg"
+import home from "./assets/icon/navIcon/home.svg";
+import homeHover from "./assets/icon/navIcon/home-hover.svg";
+import lighting from "./assets/icon/navIcon/lighting.svg";
+import lightingHover from "./assets/icon/navIcon/lightin-hover.svg";
+import wallet from "./assets/icon/navIcon/wallet.svg";
+import walletHover from "./assets/icon/navIcon/wallet-hover.svg";
+import filelock from "./assets/icon/navIcon/file-lock.svg";
+import filelockHover from "./assets/icon/navIcon/file-lock-hover.svg";
 
-import layers from "./assets/icon/navIcon/layers.svg"
-import layerHover from "./assets/icon/navIcon/layers-hover.svg"
-import clock from "./assets/icon/navIcon/clock.svg"
-import clockHover from "./assets/icon/navIcon/clock-hover.svg"
-import domain from "./assets/icon/navIcon/server.svg"
-import domainHover from "./assets/icon/navIcon/server-hover.svg"
-import gift from "./assets/icon/navIcon/gift.svg"
-import giftHover from "./assets/icon/navIcon/gift-hover.svg"
-import smile from "./assets/icon/navIcon/smiley.svg"
-import smileHover from "./assets/icon/navIcon/smiley-hover.svg"
-import deposit from "./assets/icon/navIcon/deposit.svg"
-import depositHover from "./assets/icon/navIcon/deposit-hover.svg"
-import transaction from "./assets/icon/navIcon/transactin.svg"
-import transactionHover from "./assets/icon/navIcon/transaction-hover.svg"
-import withdrow from "./assets/icon/navIcon/withdraw.svg"
-import withdrowHover from "./assets/icon/navIcon/withdraw-hover.svg"
-import settings from "./assets/icon/navIcon/settings.svg"
-import settingsHover from "./assets/icon/navIcon/settings-hover.svg"
-import payment from "./assets/icon/navIcon/payment.svg"
-import paymentHover from "./assets/icon/navIcon/payment-hover.svg"
-import withdraw1 from "./assets/icon/navIcon/withdraw1.svg"
-import withdraw1Hover from "./assets/icon/navIcon/withdraw-hover1.svg"
+import layers from "./assets/icon/navIcon/layers.svg";
+import layerHover from "./assets/icon/navIcon/layers-hover.svg";
+import clock from "./assets/icon/navIcon/clock.svg";
+import clockHover from "./assets/icon/navIcon/clock-hover.svg";
+import domain from "./assets/icon/navIcon/server.svg";
+import domainHover from "./assets/icon/navIcon/server-hover.svg";
+import gift from "./assets/icon/navIcon/gift.svg";
+import giftHover from "./assets/icon/navIcon/gift-hover.svg";
+import smile from "./assets/icon/navIcon/smiley.svg";
+import smileHover from "./assets/icon/navIcon/smiley-hover.svg";
+import deposit from "./assets/icon/navIcon/deposit.svg";
+import depositHover from "./assets/icon/navIcon/deposit-hover.svg";
+import transaction from "./assets/icon/navIcon/transactin.svg";
+import transactionHover from "./assets/icon/navIcon/transaction-hover.svg";
+import withdrow from "./assets/icon/navIcon/withdraw.svg";
+import withdrowHover from "./assets/icon/navIcon/withdraw-hover.svg";
+import settings from "./assets/icon/navIcon/settings.svg";
+import settingsHover from "./assets/icon/navIcon/settings-hover.svg";
+import payment from "./assets/icon/navIcon/payment.svg";
+import paymentHover from "./assets/icon/navIcon/payment-hover.svg";
+import withdraw1 from "./assets/icon/navIcon/withdraw1.svg";
+import withdraw1Hover from "./assets/icon/navIcon/withdraw-hover1.svg";
 
-import file from "./assets/icon/dashboard/file.svg"
-import wallet2 from "./assets/icon/dashboard/wallet-2.svg"
-import profile from "./assets/icon/dashboard/profile.svg"
-import { CadeInterface, CadeInterface2 } from "./types/dashboardType"
+import file from "./assets/icon/dashboard/file.svg";
+import wallet2 from "./assets/icon/dashboard/wallet-2.svg";
+import profile from "./assets/icon/dashboard/profile.svg";
+import { CadeInterface, CadeInterface2 } from "./types/dashboardType";
 
-import trophy from "./assets/icon/dashboard/trophy.svg"
-import shield from "./assets/icon/dashboard/shield-quartered.svg"
-import ticket from "./assets/icon/dashboard/ticket.svg"
-import dWallet from "./assets/icon/dashboard/wallet.svg"
+import trophy from "./assets/icon/dashboard/trophy.svg";
+import shield from "./assets/icon/dashboard/shield-quartered.svg";
+import ticket from "./assets/icon/dashboard/ticket.svg";
+import dWallet from "./assets/icon/dashboard/wallet.svg";
 
-import qrCode from "./assets/image/diposit/qr-code.png"
-import loginImage from "./assets/image/login/login.png"
+import qrCode from "./assets/image/diposit/qr-code.png";
+import loginImage from "./assets/image/login/login.png";
 
-import logo from "./assets/image/logo/logo-2.png"
+import logo from "./assets/image/logo/logo-2.png";
+import favicon from "./assets/image/logo/favicon.png"
 
-import tick from "./assets/icon/Starthere/tick.svg"
+import tick from "./assets/icon/Starthere/tick.svg";
 
-import lottie from "./assets/lottie/loading.json"
-import loadingLottie from "./assets/lottie/loading-lottie.json"
-import rightArrowAnimation from "./assets/lottie/right-arrow.json"
+import lottie from "./assets/lottie/loading.json";
+import loadingLottie from "./assets/lottie/loading-lottie.json";
+import rightArrowAnimation from "./assets/lottie/right-arrow.json";
 
-export const loading = lottie
-export const loadingLotti = loadingLottie
-export const rightArrowA = rightArrowAnimation
+export const loading = lottie;
+export const loadingLotti = loadingLottie;
+export const rightArrowA = rightArrowAnimation;
 
-import usdt from "./assets/icon/payment/usdt.svg"
+import usdt from "./assets/icon/payment/usdt.svg";
 
-import bnb from "./assets/icon/dashboard/bnb.svg"
-import usdts from "./assets/icon/dashboard/usdt.svg"
-import musd from "./assets/icon/dashboard/musd.svg"
-import mind from "./assets/icon/dashboard/mind.svg"
+import bnb from "./assets/icon/dashboard/bnb.svg";
+import usdts from "./assets/icon/dashboard/usdt.svg";
+import musd from "./assets/icon/dashboard/musd.svg";
+import mind from "./assets/icon/dashboard/mind.svg";
 
-import rightArrow from "./assets/icon/withdraw/right-slide.svg"
+import rightArrow from "./assets/icon/withdraw/right-slide.svg";
 
-import wallet1 from "./assets/icon/dashboard/wallet2.svg" 
+import wallet1 from "./assets/icon/dashboard/wallet2.svg";
 
 export const walletHistory = [
   {
@@ -94,10 +95,9 @@ export const walletHistory = [
     transition_History: "0x3cFbca23e190e8E29626aBd81cD9AD1C57c9f8796",
     wallletHistory: "0x3cFbca23e190e8E29626aB890",
   },
-]
+];
 
 export const mainNavItem: MenuInterface[] = [
-
   {
     id: 113,
     pathname: "/dashboard/all-user",
@@ -107,8 +107,8 @@ export const mainNavItem: MenuInterface[] = [
   },
   {
     id: 114,
-    pathname: "/dashboard/deposit",
-    item: "Deposit",
+    pathname: "/dashboard/general-settings",
+    item: "General Settings",
     icon1: deposit,
     icon2: depositHover,
   },
@@ -126,7 +126,7 @@ export const mainNavItem: MenuInterface[] = [
     icon1: wallet,
     icon2: walletHover,
   },
-]
+];
 export const subNavItem: MenuInterface[] = [
   {
     id: 221,
@@ -156,7 +156,7 @@ export const subNavItem: MenuInterface[] = [
     icon1: smile,
     icon2: smileHover,
   },
-]
+];
 
 export const submenuItem: MenuInterface[] = [
   {
@@ -187,7 +187,7 @@ export const submenuItem: MenuInterface[] = [
     icon1: withdraw1,
     icon2: withdraw1Hover,
   },
-]
+];
 export const dashboardCard: CadeInterface[] = [
   {
     img: profile,
@@ -206,7 +206,7 @@ export const dashboardCard: CadeInterface[] = [
     title: "Wallet",
     secretCode: "12/24",
   },
-]
+];
 
 export const dashboardCard2: CadeInterface2[] = [
   {
@@ -229,9 +229,9 @@ export const dashboardCard2: CadeInterface2[] = [
     title: "Tickets",
     number: "96",
   },
-]
+];
 
-type TTable = { table: boolean; status: boolean }
+type TTable = { table: boolean; status: boolean };
 export const tableData: TTable[] = [
   { table: true, status: true },
   { table: true, status: true },
@@ -258,7 +258,7 @@ export const tableData: TTable[] = [
   { table: true, status: true },
   { table: true, status: true },
   { table: true, status: true },
-]
+];
 
 export const PlanData = [
   {
@@ -320,7 +320,7 @@ export const PlanData = [
     },
     save: "150",
   },
-]
+];
 export const images = {
   home,
   homeHover,
@@ -342,5 +342,6 @@ export const images = {
   settings,
   settingsHover,
   rightArrow,
-  wallet1
-}
+  favicon,
+  wallet1,
+};

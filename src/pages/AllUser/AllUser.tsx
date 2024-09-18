@@ -1,4 +1,3 @@
-import React from "react";
 import TData from "../../Components/Table/TData";
 import Form from "../../Components/Forms/Form";
 import InputField from "../../Components/Forms/InputField";
@@ -8,17 +7,55 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 
 import { GoSearch } from "react-icons/go";
 import TableBody from "../../Components/TableBody/TableBody";
+import axiosInstance from "../../utils/axiosConfig";
+import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
 export const validationSchema = z.object({
   search: z.string().min(3, "Please type minimum 3 word"),
 });
+
+const fetchToken = async () => {
+  const response = await axiosInstance.get("/client-lists");
+  return response;
+};
+
 const AllUser = () => {
   const formSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log(data);
   };
+  const {
+    data: allusers,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["allusers"],
+    queryFn: fetchToken,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+  const allUserData = allusers?.data?.data;
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+    return formattedDate;
+  };
   return (
     <div className="py-6">
       <div className="flex justify-between items-center">
-        <h4 className="font-medium text-cblack mb-5">Total User : 4564</h4>
+        <h4 className="font-medium text-cblack mb-5">
+          Total User : {allUserData?.length}
+        </h4>
         <Form
           onSubmit={formSubmit}
           resolver={zodResolver(validationSchema)}
@@ -37,34 +74,61 @@ const AllUser = () => {
           </div>
         </Form>
       </div>
+      {isLoading ? (
+        <div className="mt-5">
+          <Skeleton count={7} height={50} />{" "}
+        </div>
+      ) : (
+        <>
+          {allUserData?.length !== 0 ? (
+            <TableBody>
+              <table className=" border-collapse w-full">
+                <thead>
+                  <tr className="bg-[#e2e2e965] text-cslate rounded-tl-lg">
+                    <th className="py-2 px-6 text-start rounded-tl-lg ">
+                      SL No
+                    </th>
+                    <th className="py-2 px-6 text-start">Name</th>
+                    <th className="py-2 px-6 text-start">Email</th>
+                    <th className="py-2 px-6 text-start">Wallet</th>
+                    <th className="py-2 px-6 text-start">Active Licence</th>
+                    <th className="py-2 px-6 text-start rounded-tr-lg ">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
 
-      <TableBody>
-        <table className=" border-collapse w-full">
-          <thead>
-            <tr className="bg-[#e2e2e965] text-cslate rounded-tl-lg">
-              <th className="py-2 px-6 text-start rounded-tl-lg ">Joind</th>
-              <th className="py-2 px-6 text-start">User Name</th>
-              <th className="py-2 px-6 text-start">Client Id</th>
-              <th className="py-2 px-6 text-start">License/expired</th>
-              <th className="py-2 px-6 text-start">Deposit</th>
-              <th className="py-2 px-6 text-start">Withdraw</th>
-              <th className="py-2 px-6 text-start">Purchase</th>
-              <th className="py-2 px-6 text-start rounded-tr-lg ">Balance</th>
-            </tr>
-          </thead>
-
-          <tbody className="bg-white">
-            <TData className="px-6">12/02/2024</TData>
-            <TData className="px-6">Mr. Alex</TData>
-            <TData className="px-6">Rt8403d</TData>
-            <TData className="px-6">12/3</TData>
-            <TData className="px-6">$500</TData>
-            <TData className="px-6">$250</TData>
-            <TData className="px-6">$145</TData>
-            <TData className="px-6">$565</TData>
-          </tbody>
-        </table>
-      </TableBody>
+                <tbody className="bg-white">
+                  {allUserData?.map((user: any, index: number) => (
+                    <tr key={user?.id}>
+                      <TData className="px-6">{index + 1}</TData>
+                      <TData className="px-6">{user?.name}</TData>
+                      <TData className="px-6">{user?.email}</TData>
+                      <TData className="px-6">wallet</TData>
+                      <TData className="px-6">
+                        {user?.created_at ? formatDate(user.created_at) : "N/A"}
+                      </TData>
+                      <TData className="px-6">
+                        {user?.activation_status !== "0" ? (
+                          <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
+                            <span>Deactive</span>
+                          </div>
+                        ) : (
+                          <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
+                            <span>Active</span>
+                          </div>
+                        )}
+                      </TData>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </TableBody>
+          ) : (
+            <p>No Data</p>
+          )}
+        </>
+      )}
     </div>
   );
 };

@@ -2,11 +2,8 @@ import TData from "../../Components/Table/TData";
 import TableBody from "../../Components/TableBody/TableBody";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useEffect, useState } from "react";
-import AddNewCoupon from "../../Components/Modal/CouponModal/AddNewCoupon";
-import CouponEditModal from "../../Components/Modal/CouponModal/CouponEditModal";
+import { useState } from "react";
 import axiosInstance from "../../utils/axiosConfig";
-import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
 import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
 import { useQuery } from "@tanstack/react-query";
@@ -52,7 +49,7 @@ const TokenSettings = () => {
   return (
     <>
       <AddNewtoken modal={modal} handleModal={handleModal} refetch={refetch} />
-       <TokenEditModal
+      <TokenEditModal
         modal={showEditModal}
         handleModal={handleEditModal}
         refetch={refetch}
