@@ -67,7 +67,7 @@ const Dashboard = () => {
         clientProfile={clientProfile}
         totalBalance={totalBalance}
       />
-      <DashboardTable />
+      {/* <DashboardTable /> */}
     </div>
   )
 }
