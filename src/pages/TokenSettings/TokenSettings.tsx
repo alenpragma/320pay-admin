@@ -2,72 +2,73 @@ import TData from "../../Components/Table/TData";
 import TableBody from "../../Components/TableBody/TableBody";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useEffect, useState } from "react";
-import AddNewCoupon from "../../Components/Modal/CouponModal/AddNewCoupon";
-import CouponEditModal from "../../Components/Modal/CouponModal/CouponEditModal";
+import { useState } from "react";
 import axiosInstance from "../../utils/axiosConfig";
-import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
 import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
+import { useQuery } from "@tanstack/react-query";
+import AddNewtoken from "../../Components/Modal/TokenModal/AddNewToken";
+import TokenEditModal from "../../Components/Modal/TokenModal/TokenEditModal";
+
+const fetchToken = async () => {
+  const response = await axiosInstance.get("/deposit-tokens");
+  return response;
+};
 
 const TokenSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
-  const [loading, setLoading] = useState(false);
-  const [editCoupon, setEditCoupon] = useState<string>("");
+  const [editToken, setEditToken] = useState<string>("");
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-  const [coupon, setCoupon] = useState([]);
   const handleModal = () => {
     setModal(!modal);
   };
   const handleEditModal = (data: string) => {
-    // console.log(id);
-    // setEditCoupon(!editCoupon);
-    setEditCoupon(data);
+    setEditToken(data);
     setShowEditModal(!showEditModal);
   };
-  const getData = async () => {
-    return;
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get("/coupons");
-      setCoupon(response?.data?.data);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
+
+  const {
+    data: tokens,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["tokens"],
+    queryFn: fetchToken,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+  const coupon = tokens?.data[0];
 
   const handleDelete = (deleteId: string) => {
-    const url = `/coupon/delete/${deleteId}`;
-    handleDeleteFn(url, getData);
+    const url = `/deposit-token/delete/${deleteId}`;
+    handleDeleteFn(url, refetch);
   };
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <>
-      <AddNewCoupon modal={modal} handleModal={handleModal} getData={getData} />
-      <CouponEditModal
+      <AddNewtoken modal={modal} handleModal={handleModal} refetch={refetch} />
+      <TokenEditModal
         modal={showEditModal}
         handleModal={handleEditModal}
-        getData={getData}
-        editCoupon={editCoupon}
+        refetch={refetch}
+        editToken={editToken}
       />
-      {loading ? (
+      {isLoading ? (
         <div className="mt-5">
           <Skeleton count={7} height={50} />{" "}
         </div>
       ) : (
         <>
-          {coupon?.length === 0 ? (
+          {coupon?.length !== 0 ? (
             <div className="py-5 px-3">
               <div className="w-full flex justify-end">
                 <button
                   onClick={handleModal}
                   className="px-4 py-1 bg-primary rounded-lg text-white font-medium"
                 >
-                  Add New Coupon
+                  Add New token
                 </button>
               </div>
               <TableBody>
@@ -75,16 +76,16 @@ const TokenSettings = () => {
                   <thead>
                     <tr className="bg-[#e2e2e965] text-cslate rounded-tl-lg">
                       <th className="py-2 px-6 text-start text-nowrap">
-                        Coupon Name
+                        Token Name
                       </th>
                       <th className="py-2 px-6 text-start text-nowrap">
-                        Coupon Code
+                        Token Symbol
                       </th>
                       <th className="py-2 px-6 text-start text-nowrap">
-                        Coupon Validity
+                        Contact Address
                       </th>
                       <th className="py-2 px-6 text-start text-nowrap">
-                        Coupon Percentage
+                        Images
                       </th>
                       <th className="py-2 px-6 text-start text-nowrap">
                         Status
@@ -96,18 +97,26 @@ const TokenSettings = () => {
                   </thead>
 
                   <tbody className="bg-white">
-                    {coupon.map((coup: any) => (
-                      <tr key={coup?.id}>
-                        <TData className="px-6">{coup?.coupon_name}</TData>
-                        <TData className="px-6">{coup?.coupon_code}</TData>
+                    {coupon?.map((token: any) => (
+                      <tr key={token?.id}>
+                        <TData className="px-6">{token?.token_name}</TData>
+                        <TData className="px-6">{token?.token_symbol}</TData>
                         <TData className="px-6">
-                          <span className="text-primary font-medium">
-                            {coup?.validity}
-                          </span>
+                          {token?.contact_address?.slice(0, 8)}{" "}
+                          {token?.contact_address ? "..." : ""}{" "}
+                          {token?.contact_address?.slice(-6)}
                         </TData>
-                        <TData className="px-6">{coup?.percentage}%</TData>
                         <TData className="px-6">
-                          {coup?.visible_status !== "1" ? (
+                          <div className="size-12 rounded-full border border-slate-400">
+                            <img
+                              className="size-full rounded-full "
+                              src={token?.image}
+                              alt=""
+                            />
+                          </div>
+                        </TData>
+                        <TData className="px-6">
+                          {token?.status !== "1" ? (
                             <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
                               <span>Deactive</span>
                             </div>
@@ -120,11 +129,11 @@ const TokenSettings = () => {
                         <TData className="px-6">
                           <div className="flex items-center gap-3">
                             <FiEdit
-                              onClick={() => handleEditModal(coup)}
+                              onClick={() => handleEditModal(token)}
                               className="size-5 text-primary cursor-pointer"
                             />{" "}
                             <RiDeleteBin6Line
-                              onClick={() => handleDelete(coup?.id)}
+                              onClick={() => handleDelete(token?.id)}
                               className="size-5 text-red-500 cursor-pointer"
                             />
                           </div>

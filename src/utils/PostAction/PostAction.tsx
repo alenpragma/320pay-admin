@@ -14,9 +14,9 @@ export const usePostAction = (
       return response.data;
     },
     onSuccess: (data) => {
-      if (data.success === 200) {
+      if (data) {
         Swal.fire({
-          title: "Plan added successfully",
+          title: "Successfully",
           icon: "success",
           customClass: {
             popup: "custom-swal-modal",
@@ -28,8 +28,8 @@ export const usePostAction = (
     },
     onError: () => {
       Swal.fire({
-        title: "Something went wrong",
-        icon: "error",
+        text: "Something went wrong",
+        icon: "warning",
         customClass: {
           popup: "custom-swal-modal",
         },

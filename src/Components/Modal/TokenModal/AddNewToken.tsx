@@ -7,26 +7,55 @@ import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import { usePostAction } from "../../../utils/PostAction/PostAction";
+import { useState } from "react";
 
 export const validationSchema = z.object({
-  coupon_name: z.string().min(1, "this field is required"),
-  validity: z.string().min(1, "this field is required"),
-  percentage: z.string().min(1, "this field is required"),
+  token_name: z.string().min(1, "this field is required"),
+  token_symbol: z.string().min(1, "this field is required"),
+  chain_id: z.string().min(1, "this field is required"),
+  wallet_address: z.string().min(1, "this field is required"),
+  contact_address: z.string().min(1, "this field is required"),
+  image: z.string().min(1, "this field is required"),
 });
 export type IProps = {
   modal: boolean;
   handleModal: () => void;
   refetch: any;
 };
-const AddNewCoupon = ({ handleModal, modal, refetch }: IProps) => {
+const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
+  const [image, setImage] = useState<File | undefined>(undefined);
   const { mutate, isPending } = usePostAction(
-    "/coupon/store",
+    "/deposit-token/store",
     refetch,
     handleModal
   );
-  const formSubmit: SubmitHandler<FieldValues> = (couponData) => {
-    mutate(couponData);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
   };
+
+  const formSubmit: SubmitHandler<FieldValues> = (tokenData) => {
+    const data = new FormData();
+    Object.keys(tokenData).forEach((key) => {
+      data.append(key, tokenData[key]);
+    });
+    if (image) {
+      data.append("image", image);
+    }
+    mutate(data);
+  };
+
+  //   const formSubmit: SubmitHandler<FieldValues> = (tokenData) => {
+  //     const formData = new FormData();
+  //     formData.append("tokenData", JSON.stringify(tokenData));
+  //     if (image) {
+  //       formData.append("image", image);
+  //     }
+  //     // const data = { ...tokenData, image: image };
+  //     mutate(formData);
+  //   };
 
   return (
     <div className="w-full">
@@ -58,18 +87,21 @@ const AddNewCoupon = ({ handleModal, modal, refetch }: IProps) => {
               onSubmit={formSubmit}
               resolver={zodResolver(validationSchema)}
               defaultValues={{
-                coupon_name: "",
-                validity: "",
-                percentage: "",
+                token_name: "",
+                token_symbol: "",
+                chain_id: "",
+                wallet_address: "",
+                contact_address: "",
+                image: "",
               }}
             >
               <div className="md:w-11/12 w-full mx-auto">
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Coupon Name
+                    Token Name
                   </p>
                   <InputField
-                    name="coupon_name"
+                    name="token_name"
                     type="text"
                     className="px-4"
                     placeholder="Enter Your Package Name"
@@ -77,10 +109,19 @@ const AddNewCoupon = ({ handleModal, modal, refetch }: IProps) => {
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Coupon Validity (Days)
+                    Token Symbol
                   </p>
                   <InputField
-                    name="validity"
+                    name="token_symbol"
+                    type="text"
+                    className="px-4"
+                    placeholder="Enter Your Package Price"
+                  />
+                </div>
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">Chain Id</p>
+                  <InputField
+                    name="chain_id"
                     type="number"
                     className="px-4"
                     placeholder="Enter Your Package Price"
@@ -88,16 +129,36 @@ const AddNewCoupon = ({ handleModal, modal, refetch }: IProps) => {
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Coupon Percentage
+                    Wallet Address
                   </p>
                   <InputField
-                    name="percentage"
-                    type="number"
+                    name="wallet_address"
+                    type="text"
                     className="px-4"
                     placeholder="Enter Your Package Duration"
                   />
                 </div>
-
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">
+                    Contact Address
+                  </p>
+                  <InputField
+                    name="contact_address"
+                    type="text"
+                    className="px-4"
+                    placeholder="Enter Your Package Price"
+                  />
+                </div>
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">image</p>
+                  <InputField
+                    name="image"
+                    type="file"
+                    className="px-4"
+                    placeholder="Enter Your Package Price"
+                    onChange={handleImageChange}
+                  />
+                </div>
                 <div className="w-full mt-6 border border-slate-300 rounded-lg">
                   {isPending ? (
                     <LoaingAnimation size={30} color="#36d7b7" />
@@ -114,4 +175,4 @@ const AddNewCoupon = ({ handleModal, modal, refetch }: IProps) => {
   );
 };
 
-export default AddNewCoupon;
+export default AddNewtoken;

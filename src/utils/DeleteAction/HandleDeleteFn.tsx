@@ -2,7 +2,6 @@ import Swal from "sweetalert2";
 import axiosInstance from "../axiosConfig";
 
 export const handleDeleteFn = async (url: string, resetData: () => void) => {
-  console.log(url);
   const result = await Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to undo this action!",
@@ -19,10 +18,8 @@ export const handleDeleteFn = async (url: string, resetData: () => void) => {
   if (result.isConfirmed) {
     try {
       const response = await axiosInstance.get(url);
-      console.log(response);
       if (response?.data?.success === 200) {
         Swal.fire({
-          title: "Deleted!",
           text: "Your file has been deleted.",
           icon: "success",
           customClass: {
