@@ -7,7 +7,7 @@ export const handleLogOut = (navigate: (a: string) => void, removePaymentToken: 
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, Logout",
+    confirmButtonText: "Logout",
     cancelButtonText: "Cancel",
     customClass: {
       popup: "custom-swal-modal",
