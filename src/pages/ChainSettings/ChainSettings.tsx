@@ -2,10 +2,9 @@ import TData from "../../Components/Table/TData";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import TableBody from "../../Components/TableBody/TableBody";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import AddNewChainModal from "../../Components/Modal/ChainModal/AddNewChainModal";
 import axiosInstance from "../../utils/axiosConfig";
-import Swal from "sweetalert2";
 import ChainEditModal from "../../Components/Modal/ChainModal/ChainEditModal";
 import { handleDeleteFn } from "../../utils/DeleteAction/HandleDeleteFn";
 import Skeleton from "react-loading-skeleton";
@@ -18,8 +17,6 @@ const fetchChain = async () => {
 
 const ChainSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
-  const [editChainModal, setEditChainModal] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [editChain, setEditChain] = useState<string>("");
   const [chainModal, setChainModal] = useState<boolean>(false);
   const handleModal = () => {
