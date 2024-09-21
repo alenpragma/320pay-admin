@@ -100,8 +100,8 @@ export const walletHistory = [
 export const mainNavItem: MenuInterface[] = [
   {
     id: 113,
-    pathname: "/dashboard/all-user",
-    item: "All User",
+    pathname: "/dashboard/all-clients",
+    item: "All Clients",
     icon1: lighting,
     icon2: lightingHover,
   },
@@ -130,15 +130,15 @@ export const mainNavItem: MenuInterface[] = [
 export const subNavItem: MenuInterface[] = [
   {
     id: 221,
-    pathname: "/dashboard/purchase-plan",
-    item: "Purchase Plan",
+    pathname: "/dashboard/purchase-plan-history",
+    item: "Purchase Plan History",
     icon1: layers,
     icon2: layerHover,
   },
   {
     id: 224,
-    pathname: "/dashboard/transaction-history",
-    item: "Transaction History",
+    pathname: "/dashboard/client-license-history",
+    item: "Client's License History",
     icon1: transaction,
     icon2: transactionHover,
   },

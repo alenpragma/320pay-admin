@@ -4,7 +4,7 @@ import StartHere from "../pages/StartHere/StartHere";
 import Deposit from "../pages/Deposit/Deposit";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Licenses from "../pages/Licenses/Licenses";
-import PurchasePlane from "../pages/PurchasePlane/PurchasePlane";
+import PurchasePlane from "../pages/PurchasePlaneHistory/PurchasePlaneHistory";
 import DepositLog from "../pages/DepositLog/DepositLog";
 import Login from "../pages/Register/Login";
 import Register from "../pages/Register/Register";
@@ -24,12 +24,15 @@ import LoginLayout from "../layouts/LoginLayout";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import RegisterOtp from "../pages/Register/RegisterOtp";
 import RegisterLayout from "../layouts/RegisterLayout";
-import AllUser from "../pages/AllUser/AllUser";
+import AllUser from "../pages/AllClients/AllUsernts";
 import PlanSettings from "../pages/PlanSettings/PlanSettings";
 import ChainSettings from "../pages/ChainSettings/ChainSettings";
 import CouponSettings from "../pages/CouponSettings/CouponSettings";
 import TokenSettings from "../pages/TokenSettings/TokenSettings";
 import GeneralSettings from "../pages/GeneralSettings/GeneralSettings";
+import AllClients from "../pages/AllClients/AllClients";
+import PurchasePlaneHistory from "../pages/PurchasePlaneHistory/PurchasePlaneHistory";
+import ClientLicenseHistory from "../pages/ClientLicenseHistory/ClientLicenseHistory";
 
 const routes = createBrowserRouter([
   {
@@ -53,8 +56,8 @@ const routes = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "all-user",
-        element: <AllUser />,
+        path: "all-clients",
+        element: <AllClients />,
       },
       {
         path: "settings/plan",
@@ -75,6 +78,14 @@ const routes = createBrowserRouter([
       {
         path: "general-settings",
         element: <GeneralSettings />,
+      },
+      {
+        path: "purchase-plan-history",
+        element: <PurchasePlaneHistory />,
+      },
+      {
+        path: "client-license-history",
+        element: <ClientLicenseHistory />,
       },
       // {
       //   path: "start-here",

@@ -122,7 +122,7 @@ const SelectField = ({
             className={className}
             isClearable={!required}
             value={
-              options.find((option) => option.value === field.value) || null
+              options?.find((option) => option.value === field.value) || null
             }
             onChange={(option) => {
               field.onChange(option?.value)

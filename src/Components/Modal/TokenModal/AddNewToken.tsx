@@ -8,12 +8,14 @@ import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import { usePostAction } from "../../../utils/PostAction/PostAction";
 import { useState } from "react";
+import axiosInstance from "../../../utils/axiosConfig";
+import { useQuery } from "@tanstack/react-query";
+import SelectField from "../../Forms/SelecetField";
 
 export const validationSchema = z.object({
   token_name: z.string().min(1, "this field is required"),
   token_symbol: z.string().min(1, "this field is required"),
   chain_id: z.string().min(1, "this field is required"),
-  wallet_address: z.string().min(1, "this field is required"),
   contact_address: z.string().min(1, "this field is required"),
   image: z.string().min(1, "this field is required"),
 });
@@ -22,6 +24,12 @@ export type IProps = {
   handleModal: () => void;
   refetch: any;
 };
+
+const fetchChain = async () => {
+  const response = await axiosInstance.get("/rpc-urls");
+  return response?.data[0];
+};
+
 const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
   const [image, setImage] = useState<File | undefined>(undefined);
   const { mutate, isPending } = usePostAction(
@@ -47,16 +55,19 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
     mutate(data);
   };
 
-  //   const formSubmit: SubmitHandler<FieldValues> = (tokenData) => {
-  //     const formData = new FormData();
-  //     formData.append("tokenData", JSON.stringify(tokenData));
-  //     if (image) {
-  //       formData.append("image", image);
-  //     }
-  //     // const data = { ...tokenData, image: image };
-  //     mutate(formData);
-  //   };
-
+  const { data: chain } = useQuery({
+    queryKey: ["chain"],
+    queryFn: fetchChain,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+  console.log(chain);
+  const currency = chain?.map((e: any) => ({
+    label: e?.rpc_chain,
+    value: e?.chain_id,
+  }));
   return (
     <div className="w-full">
       <div
@@ -90,7 +101,6 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
                 token_name: "",
                 token_symbol: "",
                 chain_id: "",
-                wallet_address: "",
                 contact_address: "",
                 image: "",
               }}
@@ -104,7 +114,7 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
                     name="token_name"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Package Name"
+                    placeholder="Token Name"
                   />
                 </div>
                 <div className="relative mb-4">
@@ -115,38 +125,27 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
                     name="token_symbol"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Package Price"
+                    placeholder="Token Symbol"
                   />
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">Chain Id</p>
-                  <InputField
+                  <SelectField
                     name="chain_id"
-                    type="number"
-                    className="px-4"
-                    placeholder="Enter Your Package Price"
+                    options={currency}
+                    placeholder="Please select an option"
+                    type="string"
                   />
                 </div>
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
-                    Wallet Address
-                  </p>
-                  <InputField
-                    name="wallet_address"
-                    type="text"
-                    className="px-4"
-                    placeholder="Enter Your Package Duration"
-                  />
-                </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Contact Address
+                    Contract Address
                   </p>
                   <InputField
                     name="contact_address"
                     type="text"
                     className="px-4"
-                    placeholder="Enter Your Package Price"
+                    placeholder="Contract Address"
                   />
                 </div>
                 <div className="relative mb-4">
