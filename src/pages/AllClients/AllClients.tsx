@@ -152,10 +152,11 @@ import TableBody from "../../Components/TableBody/TableBody";
 import axiosInstance from "../../utils/axiosConfig";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import EditClients from "../../Components/Modal/AllClients/EditClients";
+import Pagination from "../../Components/PaginationButton/Pagination";
 // import Pagination from "../../Components/Pagination/Pagination";
 export const validationSchema = z.object({
   search: z.string().min(3, "Please type minimum 3 word"),
@@ -169,7 +170,7 @@ const fetchToken = async (page: number) => {
   }
 
   const response = await axiosInstance.get(`/client-lists?per_page=20&page=1`);
-  cache.set(page, response);
+  // cache.set(page, response);
   return response;
 };
 
@@ -211,7 +212,6 @@ const AllClients = () => {
     });
     return formattedDate;
   };
-
   return (
     <>
       <EditClients
@@ -282,7 +282,7 @@ const AllClients = () => {
                   <TData className="px-6">{user?.id}</TData>
                   <TData className="px-6">wallet</TData>
                   <TData className="px-6">
-                    {user?.activation_status !== "1" ? (
+                    {user?.activation_status !== "0" ? (
                       <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
                         <span>Deactive</span>
                       </div>

@@ -13,7 +13,7 @@ import TransitionHistory from "../pages/TransitionHistory/TransitionHistory";
 import NotFound from "../pages/NotFound/NotFound";
 import ProtectRoute from "../Components/ProtectRouter/ProtectRoute";
 import Payment from "../pages/Payment/Payment";
-import WithdrawHistory from "../pages/WithdrawHistory/WithdrawHistory";
+import WithdrawHistory from "../pages/ClientWithdrawHistory/WithdrawHistoryistory";
 import Withdraw from "../pages/Withdraw/Withdraw";
 import Otp from "../pages/OtpPage/Otp";
 import Preview from "../pages/Preview/Preview";
@@ -33,6 +33,7 @@ import GeneralSettings from "../pages/GeneralSettings/GeneralSettings";
 import AllClients from "../pages/AllClients/AllClients";
 import PurchasePlaneHistory from "../pages/PurchasePlaneHistory/PurchasePlaneHistory";
 import ClientLicenseHistory from "../pages/ClientLicenseHistory/ClientLicenseHistory";
+import ClientWithdrawHistory from "../pages/ClientWithdrawHistory/ClientWithdrawHistory";
 
 const routes = createBrowserRouter([
   {
@@ -86,6 +87,10 @@ const routes = createBrowserRouter([
       {
         path: "client-license-history",
         element: <ClientLicenseHistory />,
+      },
+      {
+        path: "client-withdraw-history",
+        element: <ClientWithdrawHistory />,
       },
       // {
       //   path: "start-here",

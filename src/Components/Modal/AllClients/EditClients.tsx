@@ -20,11 +20,10 @@ export type IProps = {
   editClient?: any;
 };
 const EditClients = ({ handleModal, modal, refetch, editClient }: IProps) => {
-  const { name, email } = editClient;
-  console.log(name, email);
-
+  const { name, email, id } = editClient;
+  console.log(name, email, id);
   const { mutate, isPending } = usePostAction(
-    "/rpc-url/update",
+    "/user/update",
     refetch,
     handleModal
   );
@@ -43,7 +42,8 @@ const EditClients = ({ handleModal, modal, refetch, editClient }: IProps) => {
       },
     });
     if (result.isConfirmed) {
-    //   mutate({ ...chainEdit, id: editClient?.id });
+      refetch();
+      mutate({ ...chainEdit, user_id: editClient?.id });
     }
   };
 

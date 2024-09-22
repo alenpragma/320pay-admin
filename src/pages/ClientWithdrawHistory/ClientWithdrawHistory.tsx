@@ -7,26 +7,44 @@ import { formatToLocalDate } from "../../hooks/formatDate";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchLicence = async () => {
-  const response = await axiosInstance.get("/admin/license-history");
+const fetchWithdraw = async () => {
+  const response = await axiosInstance.get("/admin/withdraw-history");
   return response;
 };
 
-const ClientLicenseHistory = () => {
+const fetchPurchasePlan = async () => {
+  const [withdrawHistoryResponse, clientListResponse, tokenListResponse] =
+    await Promise.all([
+      axiosInstance.get(`/admin/withdraw-history`),
+      axiosInstance.get(`/client-lists`),
+      axiosInstance.get(`/deposit-tokens`),
+    ]);
+
+  return {
+    withdrawHistory: withdrawHistoryResponse.data,
+    clientLists: clientListResponse.data,
+    tokenLists: tokenListResponse.data,
+  };
+};
+
+const ClientWithdrawHistory = () => {
   const {
-    data: license,
+    data: withdraws,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["coupons"],
-    queryFn: fetchLicence,
+    queryKey: ["withdrawHistory", "clientLists", "tokenLists"],
+    queryFn: fetchPurchasePlan,
     staleTime: 10000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
   });
 
-  const licenses = license?.data?.data;
+  // const withdraw = withdraws?.data?.data;
+  const clientList = withdraws?.clientLists?.data;
+  const tokenList = withdraws?.tokenLists[0];
+  const withdrawHistory = withdraws?.withdrawHistory?.data;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -51,7 +69,7 @@ const ClientLicenseHistory = () => {
           </div>
         ) : (
           <>
-            {licenses?.length !== 0 ? (
+            {withdrawHistory?.length !== 0 ? (
               <div className=" rounded-xl border-2 border-[#E2E2E9] pb-4 mt-4 rounded-t-xl">
                 <div className="overflow-x-auto w-full">
                   <table className=" border-collapse w-full">
@@ -61,49 +79,70 @@ const ClientLicenseHistory = () => {
                           SL
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap ">
-                          Domain Name
+                          Date
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap ">
-                          Email
+                          Client Name
+                        </th>
+                        <th className="py-2 px-6 text-start  whitespace-nowrap ">
+                          Transition History
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap">
-                          Start Date
+                          Wallet Address
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap">
-                          Expire Date
+                          Token
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap">
-                          License Key
-                        </th>
-                        <th className="py-2 px-6 text-start  whitespace-nowrap rounded-tr-xl">
                           Status
                         </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white">
-                      {licenses?.map((data: any, index: number) => (
+                      {withdrawHistory?.map((data: any, index: number) => (
                         <tr key={index}>
                           <TData className="px-6">{index + 1}</TData>
-                          <TData className="px-6">{data?.domain_name}</TData>
-                          <TData className="px-6">{data?.email}</TData>
                           <TData className="px-6">
-                            {data?.start_date
-                              ? formatDate(data?.start_date)
-                              : ""}
+                            {data?.date ? formatDate(data?.date) : ""}
                           </TData>
                           <TData className="px-6">
-                            {data?.end_date ? formatDate(data?.end_date) : ""}
+                            {clientList
+                              ?.filter(
+                                (user: any) => user.id == data?.client_id
+                              )
+                              .map((user: any) => (
+                                <div key={user.id}>
+                                  <p>{user?.name}</p>
+                                </div>
+                              ))}
                           </TData>
-
-                          <TData className="px-6">{data?.license_key}</TData>
                           <TData className="px-6">
-                            {data?.status !== "0" ? (
+                            {data?.txn_hash?.slice(0, 8)}...
+                            {data?.txn_hash?.slice(-4)}
+                          </TData>
+                          <TData className="px-6">
+                            {data?.wallet_address?.slice(0, 8)}...
+                            {data?.wallet_address?.slice(-4)}
+                          </TData>
+                          <TData className="px-6">
+                            {tokenList
+                              ?.filter(
+                                (token: any) => token.id == data?.token_id
+                              )
+                              .map((token: any) => (
+                                <div key={token.id}>
+                                  <p>{token?.token_name}</p>
+                                </div>
+                              ))}
+                          </TData>
+                          <TData className="px-6">
+                            {data?.status !== "approved" ? (
                               <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
-                                <span>Deactive</span>
+                                <span>Pending</span>
                               </div>
                             ) : (
                               <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
-                                <span>Active</span>
+                                <span>Appoved</span>
                               </div>
                             )}
                           </TData>
@@ -123,4 +162,4 @@ const ClientLicenseHistory = () => {
   );
 };
 
-export default ClientLicenseHistory;
+export default ClientWithdrawHistory;
