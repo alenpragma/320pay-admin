@@ -144,8 +144,8 @@ export const subNavItem: MenuInterface[] = [
   },
   {
     id: 225,
-    pathname: "/dashboard/withdraw-history",
-    item: "Withdraw History",
+    pathname: "/dashboard/client-withdraw-history",
+    item: "Client's Withdraw History",
     icon1: withdrow,
     icon2: withdrowHover,
   },
