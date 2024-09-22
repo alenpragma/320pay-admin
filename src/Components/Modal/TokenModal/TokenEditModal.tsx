@@ -46,7 +46,6 @@ const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
     }
   };
   const formSubmit: SubmitHandler<FieldValues> = async (tokenEdit) => {
-    console.log("Form Values:", tokenEdit); // Check form values
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to update data?",

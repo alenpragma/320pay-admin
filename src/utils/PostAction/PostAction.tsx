@@ -5,8 +5,8 @@ import Swal from "sweetalert2";
 
 export const usePostAction = (
   url: string,
-  refetch: () => void,
-  handleModal: (e: any) => void
+  refetch?: () => void,
+  handleModal?: (e: any) => void
 ) => {
   const mutation = useMutation({
     mutationFn: async (postData: FieldValues) => {
@@ -22,9 +22,13 @@ export const usePostAction = (
             popup: "custom-swal-modal",
           },
         });
-        refetch();
+        if (refetch) {
+          refetch();
+        }
       }
-      handleModal("");
+      if (handleModal) {
+        handleModal("");
+      }
     },
     onError: () => {
       Swal.fire({

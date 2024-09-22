@@ -63,7 +63,6 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
     refetchOnReconnect: false,
     retry: false,
   });
-  console.log(chain);
   const currency = chain?.map((e: any) => ({
     label: e?.rpc_chain,
     value: e?.chain_id,
@@ -87,7 +86,7 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
       >
         <div className="w-full h-full rounded bg-[#ffffff] ">
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
-            <h4> Add New Coupon</h4>
+            <h4> Add New Token</h4>
             <RxCross1
               onClick={handleModal}
               className="cursor-pointer hover:scale-105"
