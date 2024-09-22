@@ -252,9 +252,6 @@ const AllClients = () => {
                   SL No
                 </th>
                 <th className="py-2 px-6 text-start text-nowrap">
-                  Created Date
-                </th>
-                <th className="py-2 px-6 text-start text-nowrap">
                   Client Name
                 </th>
                 <th className="py-2 px-6 text-start text-nowrap">
@@ -266,6 +263,9 @@ const AllClients = () => {
                 </th>
                 <th className="py-2 px-6 text-start text-nowrap">
                   Active Licence
+                </th>
+                <th className="py-2 px-6 text-start text-nowrap">
+                  Created Date
                 </th>
                 <th className="py-2 px-6 text-start text-nowrap rounded-tr-lg ">
                   Actions
@@ -282,9 +282,6 @@ const AllClients = () => {
                   <TData className="px-6">{user?.id}</TData>
                   <TData className="px-6">wallet</TData>
                   <TData className="px-6">
-                    {user?.created_at ? formatDate(user.created_at) : "N/A"}
-                  </TData>
-                  <TData className="px-6">
                     {user?.activation_status !== "1" ? (
                       <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
                         <span>Deactive</span>
@@ -294,6 +291,9 @@ const AllClients = () => {
                         <span>Active</span>
                       </div>
                     )}
+                  </TData>
+                  <TData className="px-6">
+                    {user?.created_at ? formatDate(user.created_at) : "N/A"}
                   </TData>
                   <TData className="px-6">
                     <div className="flex items-center gap-3">
