@@ -261,6 +261,7 @@ const AllClients = () => {
                 <th className="py-2 px-6 text-start text-nowrap">
                   Wallet Address
                 </th>
+                <th className="py-2 px-6 text-start text-nowrap">Secret Key</th>
                 <th className="py-2 px-6 text-start text-nowrap">
                   Active Licence
                 </th>
@@ -280,7 +281,11 @@ const AllClients = () => {
                   <TData className="px-6">{user?.name}</TData>
                   <TData className="px-6">{user?.email}</TData>
                   <TData className="px-6">{user?.id}</TData>
-                  <TData className="px-6">wallet</TData>
+                  <TData className="px-6">
+                    {user?.client_wallet_address?.slice(0, 8)}...
+                    {user?.client_wallet_address?.slice(-4)}
+                  </TData>
+                  <TData className="px-6">{user?.secret_key}</TData>
                   <TData className="px-6">
                     {user?.activation_status !== "0" ? (
                       <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
