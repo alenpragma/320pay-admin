@@ -94,6 +94,12 @@ const ClientWithdrawHistory = () => {
                           Token
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap">
+                          Withdrawal Charge
+                        </th>
+                        <th className="py-2 px-6 text-start  whitespace-nowrap">
+                          Withdrawal Amount
+                        </th>
+                        <th className="py-2 px-6 text-start  whitespace-nowrap">
                           Status
                         </th>
                       </tr>
@@ -135,6 +141,8 @@ const ClientWithdrawHistory = () => {
                                 </div>
                               ))}
                           </TData>
+                          <TData className="px-6">${data?.charge}</TData>
+                          <TData className="px-6">${data?.amount}</TData>
                           <TData className="px-6">
                             {data?.status !== "approved" ? (
                               <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">

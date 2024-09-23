@@ -6,19 +6,25 @@ import Skeleton from "react-loading-skeleton";
 import { formatToLocalDate } from "../../hooks/formatDate";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
-const fetchLicence = async () => {
-  const response = await axiosInstance.get("/admin/license-history");
-  return response;
-};
+import PaginationButtons from "../../Components/PaginationButton/PaginationButton";
 
 const ClientLicenseHistory = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [editClient, setEditClient] = useState("");
+  const perPage = 5;
+  const fetchLicence = async () => {
+    const response = await axiosInstance.get(
+      `admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
+    );
+    return response;
+  };
+
   const {
     data: license,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["coupons"],
+    queryKey: ["coupons", currentPage],
     queryFn: fetchLicence,
     staleTime: 10000,
     refetchOnWindowFocus: false,
@@ -26,7 +32,9 @@ const ClientLicenseHistory = () => {
     retry: false,
   });
 
-  const licenses = license?.data?.data;
+  const licenses = license?.data?.data?.data;
+  const totalUsers = license?.data?.data?.total || 0;
+  const totalPages = Math.ceil(totalUsers / perPage);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -83,7 +91,10 @@ const ClientLicenseHistory = () => {
                     <tbody className="bg-white">
                       {licenses?.map((data: any, index: number) => (
                         <tr key={index}>
-                          <TData className="px-6">{index + 1}</TData>
+                          <TData className="px-6">
+                            {" "}
+                            {index + 1 + currentPage * perPage}
+                          </TData>
                           <TData className="px-6">{data?.domain_name}</TData>
                           <TData className="px-6">{data?.email}</TData>
                           <TData className="px-6">
@@ -119,6 +130,16 @@ const ClientLicenseHistory = () => {
           </>
         )}
       </div>
+
+      {licenses?.length < 5 ? (
+        <PaginationButtons
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 };

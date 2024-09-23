@@ -34,12 +34,17 @@ const Login = () => {
     mutationFn: async (loginData: FieldValues) => {
       const response = await axiosInstance.post("/login", loginData);
       if (response?.data?.success !== 200) {
-        setError("password doesn't match");
+        setError("the email or password dosen't match");
+        return;
+      }
+      if (response?.data?.role !== "admin") {
+        setError("User not found");
+        return;
       }
       return response.data;
     },
     onSuccess: (data) => {
-      if (data?.status !== 422) {
+      if (data?.success == 200) {
         setPaymentaToken(data?.token);
         Swal.fire({
           title: "Successfully",
@@ -52,7 +57,7 @@ const Login = () => {
       }
     },
     onError: () => {
-      setError("the email or password dosen't match");
+      setError("dsasdf");
     },
   });
 
