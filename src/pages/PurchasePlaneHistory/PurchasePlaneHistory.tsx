@@ -2,20 +2,24 @@ import TData from "../../Components/Table/TData";
 import axiosInstance from "../../utils/axiosConfig";
 import Skeleton from "react-loading-skeleton";
 import { useQuery } from "@tanstack/react-query";
-
-const fetchPurchasePlan = async () => {
-  const [purchaseHistoryResponse, clientListsResponse] = await Promise.all([
-    axiosInstance.get(`/admin/purchase-history`),
-    axiosInstance.get(`/client-lists`),
-  ]);
-
-  return {
-    purchaseHistory: purchaseHistoryResponse.data,
-    clientLists: clientListsResponse.data,
-  };
-};
+import { useState } from "react";
 
 const PurchasePlaneHistory = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [editClient, setEditClient] = useState("");
+  const perPage = 2;
+
+  const fetchPurchasePlan = async () => {
+    const [purchaseHistoryResponse, clientListsResponse] = await Promise.all([
+      axiosInstance.get(`/admin/purchase-history`),
+      axiosInstance.get(`/client-lists`),
+    ]);
+    return {
+      purchaseHistory: purchaseHistoryResponse.data,
+      clientLists: clientListsResponse.data,
+    };
+  };
+
   const { data: purchasePlan, isLoading } = useQuery({
     queryKey: ["purchaseHistory", "clientLists"],
     queryFn: fetchPurchasePlan,
@@ -25,7 +29,7 @@ const PurchasePlaneHistory = () => {
     retry: false,
   });
   const userList = purchasePlan?.clientLists?.data;
-  const purchase = purchasePlan?.purchaseHistory?.data;
+  const purchase = purchasePlan?.purchaseHistory?.data?.data;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -49,7 +53,7 @@ const PurchasePlaneHistory = () => {
           </div>
         ) : (
           <>
-            {purchase.length !== 0 ? (
+            {purchase?.length !== 0 ? (
               <div className=" rounded-xl border-2 border-[#E2E2E9] pb-4 mt-4">
                 <div className="overflow-x-auto w-full">
                   <table className=" border-collapse w-full">

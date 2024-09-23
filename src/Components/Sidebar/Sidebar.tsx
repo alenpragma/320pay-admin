@@ -6,7 +6,6 @@ import { MenuInterface } from "../../types/menuType";
 import { GoChevronDown } from "react-icons/go";
 import { RxExit } from "react-icons/rx";
 import { removePaymentaToken } from "../../hooks/handelAuthToken";
-import Swal from "sweetalert2";
 import { handleLogOut } from "../../Actions/LogoutActions";
 
 interface SidebarProps {
@@ -82,9 +81,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-2 lg:py-2.5 pt-8">
-        <NavLink to="/dashboard" className=" w-full">
+        {/* <NavLink to="/dashboard" className=" w-full">
           <img className="w-full h-14" src={images.logo} alt="" />
-        </NavLink>
+        </NavLink> */}
         <button
           // ref={trigger}
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -108,7 +107,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         </button>
       </div>
 
-      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+      <div className="no-scrollbar mt-5 flex flex-col overflow-y-auto duration-300 ease-linear">
         <nav className="mt-0 py-4 px-4 lg:mt-0 lg:px-6">
           <div>
             <ul className="mb-6 flex flex-col gap-1.5">

@@ -1,11 +1,12 @@
-import ReactPaginate from 'react-paginate';
-import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import ReactPaginate from "react-paginate";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 const PaginationButtons = ({
   setCurrentPage,
   currentPage,
   totalPages,
 }: any) => {
+  console.log(setCurrentPage, currentPage, totalPages);
   const handlePageClick = ({ selected }: any) => {
     setCurrentPage(selected);
   };
@@ -18,7 +19,7 @@ const PaginationButtons = ({
         breakLabel={<span className="mr-0.5 lg:mr-4">...</span>}
         nextLabel={
           showNextButton ? (
-            <span className="paginationButton flex items-center justify-center bg-success text-white rounded-md">
+            <span className="paginationButton flex items-center justify-center bg-primary text-white rounded-sm md:rounded-md">
               <BsChevronRight />
             </span>
           ) : null
@@ -28,13 +29,13 @@ const PaginationButtons = ({
         pageCount={totalPages}
         previousLabel={
           showPrevButton ? (
-            <span className="paginationButton flex items-center justify-center bg-success text-black rounded-md mr-1 lg:mr-4">
+            <span className="paginationButton flex items-center justify-center bg-primary text-white rounded-sm md:rounded-md mr-1 lg:mr-4">
               <BsChevronLeft />
             </span>
           ) : null
         }
         containerClassName="flex items-center justify-center mt-8 mb-4"
-        pageClassName="block border text-xs md:text-md pageButton  border-solid border-bodydark1 flex items-center justify-center rounded-md mr-1 lg:mr-4"
+        pageClassName="block border text-xs md:text-md pageButton  border-solid border-gray-500 flex items-center justify-center rounded-sm md:rounded-md mr-1 lg:mr-4"
         activeClassName="bg-primary border-primary text-white"
         renderOnZeroPageCount={null}
       />
