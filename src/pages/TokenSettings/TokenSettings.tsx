@@ -15,6 +15,17 @@ const fetchToken = async () => {
   return response;
 };
 
+const fetchPlan = async () => {
+  const [allTokens, allChain] = await Promise.all([
+    axiosInstance.get(`/deposit-tokens`),
+    axiosInstance.get(`/rpc-urls`),
+  ]);
+  return {
+    allTokens: allTokens.data,
+    allCahin: allChain.data,
+  };
+};
+
 const TokenSettings = () => {
   const [modal, setModal] = useState<boolean>(false);
   const [editToken, setEditToken] = useState<string>("");
@@ -32,14 +43,16 @@ const TokenSettings = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["tokens"],
-    queryFn: fetchToken,
+    queryKey: ["tokens", "chain"],
+    queryFn: fetchPlan,
     staleTime: 10000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
   });
-  const coupon = tokens?.data[0];
+  // const coupon = tokens?.data[0];
+  const coupon = tokens?.allTokens[0];
+  const chain = tokens?.allCahin[0];
 
   const handleDelete = (deleteId: string) => {
     const url = `/deposit-token/delete/${deleteId}`;
@@ -48,12 +61,18 @@ const TokenSettings = () => {
 
   return (
     <>
-      <AddNewtoken modal={modal} handleModal={handleModal} refetch={refetch} />
+      <AddNewtoken
+        modal={modal}
+        handleModal={handleModal}
+        refetch={refetch}
+        chain={chain}
+      />
       <TokenEditModal
         modal={showEditModal}
         handleModal={handleEditModal}
         refetch={refetch}
         editToken={editToken}
+        chain={chain}
       />
       {isLoading ? (
         <div className="mt-5">

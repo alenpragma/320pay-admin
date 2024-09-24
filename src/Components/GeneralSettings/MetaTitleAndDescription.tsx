@@ -15,23 +15,23 @@ export const validationSchema = z.object({
   meta_banner: z.string().optional(),
 });
 
-const MetaTitleAndDescription = () => {
+const MetaTitleAndDescription = ({ userInformation, refetch }: any) => {
   const [bannerPreview, setBannerPreview] = useState<string | undefined>(
     undefined
   );
-
+  const [image, setImage] = useState<File | undefined>(undefined);
   const [error, setError] = useState<string | null>("");
-
   const handleImageChange =
     (setPreview: React.Dispatch<React.SetStateAction<string | undefined>>) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
+        setImage(file);
         setPreview(URL.createObjectURL(file));
       }
     };
 
-  const { mutate, isPending } = usePostAction("/description/update");
+  const { mutate, isPending } = usePostAction("/description/update", refetch);
   const formSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (bannerPreview == undefined) {
       setError("Please fill up the form input");
@@ -51,7 +51,9 @@ const MetaTitleAndDescription = () => {
     });
     if (result.isConfirmed) {
       const formData = new FormData();
-      formData.append("meta_banner", data.meta_banner[0]);
+      if (image) {
+        formData.append("meta_banner", image);
+      }
       formData.append("meta_title", data.meta_title);
       formData.append("meta_description", data.meta_description);
       mutate(formData);
@@ -101,7 +103,7 @@ const MetaTitleAndDescription = () => {
               <div className="cursor-pointer w-full h-full flex justify-center items-center">
                 <img
                   className="w-full h-full object-contain"
-                  src={bannerPreview || images.logo}
+                  src={bannerPreview || userInformation?.meta_banner}
                   alt="Logo"
                 />
                 <div className="absolute -right-3 -bottom-3 size-6 p-1 bg-white">

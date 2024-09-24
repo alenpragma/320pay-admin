@@ -29,8 +29,15 @@ export type IProps = {
   handleModal: (e: any) => void;
   refetch: any;
   editToken: any;
+  chain: any;
 };
-const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
+const TokenEditModal = ({
+  handleModal,
+  modal,
+  refetch,
+  editToken,
+  chain,
+}: IProps) => {
   const { token_name, token_symbol, chain_id, contact_address, status } =
     editToken;
   const [image, setImage] = useState<File | undefined>(undefined);
@@ -39,6 +46,11 @@ const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
     refetch,
     handleModal
   );
+
+  const currency = chain?.map((e: any) => ({
+    label: e?.rpc_chain,
+    value: e?.chain_id,
+  }));
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -133,7 +145,7 @@ const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
                       className="px-4"
                     />
                   </div>
-                  <div className="relative mb-4">
+                  {/* <div className="relative mb-4">
                     <p className="font-semibold text-secondary mb-1">
                       Chain Id
                     </p>
@@ -141,6 +153,17 @@ const TokenEditModal = ({ handleModal, modal, refetch, editToken }: IProps) => {
                       name="chain_id"
                       type="number"
                       className="px-4"
+                    />
+                  </div> */}
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Select Chain
+                    </p>
+                    <SelectField
+                      name="chain_id"
+                      options={currency}
+                      placeholder="Please select an option"
+                      type="string"
                     />
                   </div>
                   <div className="relative mb-4">
