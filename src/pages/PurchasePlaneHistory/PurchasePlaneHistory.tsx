@@ -32,11 +32,8 @@ const PurchasePlaneHistory = () => {
   });
   const userList = purchasePlan?.clientLists?.data;
   const purchase = purchasePlan?.purchaseHistory?.data?.data;
-
-  console.log(purchasePlan);
-
-  const totalUsers = purchasePlan?.purchaseHistory?.data?.total || 0;
-  const totalPages = Math.ceil(totalUsers / perPage);
+  const totalPurchasePlan = purchasePlan?.purchaseHistory?.data?.total || 0;
+  const totalPages = Math.ceil(totalPurchasePlan / perPage);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -148,7 +145,7 @@ const PurchasePlaneHistory = () => {
         )}
       </div>
 
-      {purchase?.length > 20 ? (
+      {totalPurchasePlan > 20 ? (
         <PaginationButtons
           totalPages={totalPages}
           currentPage={currentPage}

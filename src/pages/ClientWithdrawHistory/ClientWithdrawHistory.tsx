@@ -34,11 +34,9 @@ const ClientWithdrawHistory = () => {
     retry: false,
   });
 
-  // const withdraw = withdraws?.data?.data;
   const clientList = withdraws?.clientLists?.data;
   const tokenList = withdraws?.tokenLists[0];
   const withdrawHistory = withdraws?.withdrawHistory?.data?.data;
-  console.log(withdraws);
 
   const totalWithdrawHistory = withdraws?.withdrawHistory?.data?.total || 0;
   const totalPages = Math.ceil(totalWithdrawHistory / perPage);

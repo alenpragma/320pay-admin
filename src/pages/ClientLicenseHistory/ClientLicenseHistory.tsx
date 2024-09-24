@@ -7,7 +7,7 @@ import PaginationButtons from "../../Components/PaginationButton/PaginationButto
 
 const ClientLicenseHistory = () => {
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 10;
+  const perPage = 20;
   const fetchLicence = async () => {
     const response = await axiosInstance.get(
       `admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
@@ -25,8 +25,8 @@ const ClientLicenseHistory = () => {
   });
 
   const licenses = license?.data?.data?.data;
-  const totalUsers = license?.data?.data?.total || 0;
-  const totalPages = Math.ceil(totalUsers / perPage);
+  const totalLicense = license?.data?.data?.total || 0;
+  const totalPages = Math.ceil(totalLicense / perPage);
   console.log(totalPages);
 
   const formatDate = (dateString: string) => {
@@ -124,7 +124,7 @@ const ClientLicenseHistory = () => {
         )}
       </div>
 
-      {licenses?.length > 9 ? (
+      {totalLicense > 20 ? (
         <PaginationButtons
           totalPages={totalPages}
           currentPage={currentPage}
