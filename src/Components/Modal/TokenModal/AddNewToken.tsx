@@ -23,14 +23,15 @@ export type IProps = {
   modal: boolean;
   handleModal: () => void;
   refetch: any;
+  chain: any;
 };
 
-const fetchChain = async () => {
-  const response = await axiosInstance.get("/rpc-urls");
-  return response?.data[0];
-};
+// const fetchChain = async () => {
+//   const response = await axiosInstance.get("/rpc-urls");
+//   return response?.data[0];
+// };
 
-const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
+const AddNewtoken = ({ handleModal, modal, refetch, chain }: IProps) => {
   const [image, setImage] = useState<File | undefined>(undefined);
   const { mutate, isPending } = usePostAction(
     "/deposit-token/store",
@@ -55,14 +56,14 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
     mutate(data);
   };
 
-  const { data: chain } = useQuery({
-    queryKey: ["chain"],
-    queryFn: fetchChain,
-    staleTime: 10000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-  });
+  // const { data: chain } = useQuery({
+  //   queryKey: ["chain"],
+  //   queryFn: fetchChain,
+  //   staleTime: 10000,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnReconnect: false,
+  //   retry: false,
+  // });
   const currency = chain?.map((e: any) => ({
     label: e?.rpc_chain,
     value: e?.chain_id,
@@ -128,7 +129,9 @@ const AddNewtoken = ({ handleModal, modal, refetch }: IProps) => {
                   />
                 </div>
                 <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">Chain Id</p>
+                  <p className="font-semibold text-secondary mb-1">
+                    Select Chain
+                  </p>
                   <SelectField
                     name="chain_id"
                     options={currency}

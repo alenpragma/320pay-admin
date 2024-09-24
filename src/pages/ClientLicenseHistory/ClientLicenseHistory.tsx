@@ -1,17 +1,13 @@
-import { Key, useEffect, useState } from "react";
+import { useState } from "react";
 import TData from "../../Components/Table/TData";
 import axiosInstance from "../../utils/axiosConfig";
-import PurchasePlaneModal from "../../Components/Modal/PurchasePlaneModal";
 import Skeleton from "react-loading-skeleton";
-import { formatToLocalDate } from "../../hooks/formatDate";
-import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import PaginationButtons from "../../Components/PaginationButton/PaginationButton";
 
 const ClientLicenseHistory = () => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [editClient, setEditClient] = useState("");
-  const perPage = 5;
+  const perPage = 20;
   const fetchLicence = async () => {
     const response = await axiosInstance.get(
       `admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
@@ -19,11 +15,7 @@ const ClientLicenseHistory = () => {
     return response;
   };
 
-  const {
-    data: license,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: license, isLoading } = useQuery({
     queryKey: ["coupons", currentPage],
     queryFn: fetchLicence,
     staleTime: 10000,
@@ -33,8 +25,9 @@ const ClientLicenseHistory = () => {
   });
 
   const licenses = license?.data?.data?.data;
-  const totalUsers = license?.data?.data?.total || 0;
-  const totalPages = Math.ceil(totalUsers / perPage);
+  const totalLicense = license?.data?.data?.total || 0;
+  const totalPages = Math.ceil(totalLicense / perPage);
+  console.log(totalPages);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -131,7 +124,7 @@ const ClientLicenseHistory = () => {
         )}
       </div>
 
-      {licenses?.length < 5 ? (
+      {totalLicense > 20 ? (
         <PaginationButtons
           totalPages={totalPages}
           currentPage={currentPage}

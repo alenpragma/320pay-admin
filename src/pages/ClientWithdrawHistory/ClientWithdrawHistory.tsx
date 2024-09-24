@@ -1,39 +1,32 @@
-import { Key, useEffect, useState } from "react";
 import TData from "../../Components/Table/TData";
 import axiosInstance from "../../utils/axiosConfig";
-import PurchasePlaneModal from "../../Components/Modal/PurchasePlaneModal";
 import Skeleton from "react-loading-skeleton";
-import { formatToLocalDate } from "../../hooks/formatDate";
-import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
-const fetchWithdraw = async () => {
-  const response = await axiosInstance.get("/admin/withdraw-history");
-  return response;
-};
-
-const fetchPurchasePlan = async () => {
-  const [withdrawHistoryResponse, clientListResponse, tokenListResponse] =
-    await Promise.all([
-      axiosInstance.get(`/admin/withdraw-history`),
-      axiosInstance.get(`/client-lists`),
-      axiosInstance.get(`/deposit-tokens`),
-    ]);
-
-  return {
-    withdrawHistory: withdrawHistoryResponse.data,
-    clientLists: clientListResponse.data,
-    tokenLists: tokenListResponse.data,
-  };
-};
+import { useState } from "react";
+import PaginationButtons from "../../Components/PaginationButton/PaginationButton";
 
 const ClientWithdrawHistory = () => {
-  const {
-    data: withdraws,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["withdrawHistory", "clientLists", "tokenLists"],
+  const [currentPage, setCurrentPage] = useState(0);
+  const perPage = 10;
+  const fetchPurchasePlan = async () => {
+    const [withdrawHistoryResponse, clientListResponse, tokenListResponse] =
+      await Promise.all([
+        axiosInstance.get(
+          `/admin/withdraw-history?per_page=${perPage}&page=${currentPage + 1}`
+        ),
+        axiosInstance.get(`/client-lists`),
+        axiosInstance.get(`/deposit-tokens`),
+      ]);
+
+    return {
+      withdrawHistory: withdrawHistoryResponse.data,
+      clientLists: clientListResponse.data,
+      tokenLists: tokenListResponse.data,
+    };
+  };
+
+  const { data: withdraws, isLoading } = useQuery({
+    queryKey: ["withdrawHistory", "clientLists", "tokenLists", currentPage],
     queryFn: fetchPurchasePlan,
     staleTime: 10000,
     refetchOnWindowFocus: false,
@@ -41,10 +34,12 @@ const ClientWithdrawHistory = () => {
     retry: false,
   });
 
-  // const withdraw = withdraws?.data?.data;
   const clientList = withdraws?.clientLists?.data;
   const tokenList = withdraws?.tokenLists[0];
-  const withdrawHistory = withdraws?.withdrawHistory?.data;
+  const withdrawHistory = withdraws?.withdrawHistory?.data?.data;
+
+  const totalWithdrawHistory = withdraws?.withdrawHistory?.data?.total || 0;
+  const totalPages = Math.ceil(totalWithdrawHistory / perPage);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -107,7 +102,9 @@ const ClientWithdrawHistory = () => {
                     <tbody className="bg-white">
                       {withdrawHistory?.map((data: any, index: number) => (
                         <tr key={index}>
-                          <TData className="px-6">{index + 1}</TData>
+                          <TData className="px-6">
+                            {index + 1 + perPage * currentPage}
+                          </TData>
                           <TData className="px-6">
                             {data?.date ? formatDate(data?.date) : ""}
                           </TData>
@@ -166,6 +163,16 @@ const ClientWithdrawHistory = () => {
           </>
         )}
       </div>
+
+      {totalWithdrawHistory > 10 ? (
+        <PaginationButtons
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 };

@@ -15,23 +15,30 @@ export const validationSchema = z.object({
   fav_icon: z.string().optional(),
 });
 
-const LogoAndFavicon = () => {
+const LogoAndFavicon = ({ userInformation, refetch }: any) => {
+  const image = userInformation?.logo;
   const [logoPreview, setLogoPreview] = useState<string | undefined>(undefined);
+  const [file1, setFile1] = useState<File | null>(null);
+  const [file2, setFile2] = useState<File | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | undefined>(
     undefined
   );
 
   const [error, setError] = useState<string | null>("");
   const handleImageChange =
-    (setPreview: React.Dispatch<React.SetStateAction<string | undefined>>) =>
+    (
+      setPreview: React.Dispatch<React.SetStateAction<string | undefined>>,
+      setFile: React.Dispatch<React.SetStateAction<File | null>>
+    ) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
+        setFile(file);
         setPreview(URL.createObjectURL(file));
       }
     };
 
-  const { mutate, isPending } = usePostAction("/logo/update");
+  const { mutate, isPending } = usePostAction("/logo/update", refetch);
   const formSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (logoPreview == undefined && faviconPreview == undefined) {
       setError("Please fill up the form input");
@@ -51,8 +58,12 @@ const LogoAndFavicon = () => {
     });
     if (result.isConfirmed) {
       const formData = new FormData();
-      formData.append("logo", data.logo[0]);
-      formData.append("fav_icon", data.fav_icon[0]);
+      if (file1) {
+        formData.append("logo", file1);
+      }
+      if (file2) {
+        formData.append("fav_icon", file2);
+      }
       mutate(formData);
     }
   };
@@ -60,79 +71,83 @@ const LogoAndFavicon = () => {
   return (
     <div className="mt-10 px-3 bg-[#FAFAFA] md:p-4 p-2 rounded-lg">
       <h4 className="text-[18px] font-medium">Logo and Favicon</h4>
-      <Form
-        onSubmit={formSubmit}
-        resolver={zodResolver(validationSchema)}
-        defaultValues={{
-          logo: "",
-          fav_icon: "",
-        }}
-      >
-        <div className="w-full gap-3 mt-8 md:h-[200px] h-fit flex justify-start md:flex-row flex-col">
-          {/* Logo Input */}
-          <div className="md:w-5/12 w-full">
-            <p className="mb-1">Logo</p>
-            <label className="md:w-full w-1/2 h-[170px] border-2 rounded-xl border-slate-300 p-1 md:relative flex justify-center items-center cursor-pointer">
-              <InputField
-                name="logo"
-                type="file"
-                className="px-4 hidden"
-                onChange={handleImageChange(setLogoPreview)}
-              />
-              <div className="cursor-pointer w-full h-full flex justify-center items-center">
-                <img
-                  className="w-full h-full object-contain"
-                  src={logoPreview || images.logo}
-                  alt="Logo"
+      {userInformation ? (
+        <Form
+          onSubmit={formSubmit}
+          resolver={zodResolver(validationSchema)}
+          defaultValues={{
+            logo: "",
+            fav_icon: "",
+          }}
+        >
+          <div className="w-full gap-3 mt-8 md:h-[200px] h-fit flex justify-start md:flex-row flex-col">
+            {/* Logo Input */}
+            <div className="md:w-5/12 w-full">
+              <p className="mb-1">Logo</p>
+              <label className="md:w-full w-1/2 h-[170px] border-2 rounded-xl border-slate-300 p-1 md:relative flex justify-center items-center cursor-pointer">
+                <InputField
+                  name="logo"
+                  type="file"
+                  className="px-4 hidden"
+                  onChange={handleImageChange(setLogoPreview, setFile1)}
                 />
-                <div className="md:absolute -right-3 -bottom-3 size-6 p-1 bg-white">
-                  <LuUploadCloud className="size-full" />
+                <div className="cursor-pointer w-full h-full flex justify-center items-center">
+                  <img
+                    className="w-full h-full object-contain"
+                    src={logoPreview || image}
+                    alt="Logo"
+                  />
+                  <div className="md:absolute -right-3 -bottom-3 size-6 p-1 bg-white">
+                    <LuUploadCloud className="size-full" />
+                  </div>
                 </div>
-              </div>
-            </label>
-          </div>
+              </label>
+            </div>
 
-          {/* Favicon Input */}
-          <div className="md:w-2/12 w-full">
-            <p className="mb-1">Favicon</p>
-            <label className="md:w-full w-1/2 h-[170px] border-2 rounded-xl border-slate-300 p-1 md:relative flex justify-center items-center cursor-pointer">
-              <InputField
-                name="fav_icon"
-                type="file"
-                className="px-4 hidden"
-                onChange={handleImageChange(setFaviconPreview)}
-              />
-              <div className="cursor-pointer w-full h-full flex justify-center items-center">
-                <img
-                  className="w-full h-full object-contain"
-                  src={faviconPreview || images.favicon}
-                  alt="Favicon"
+            {/* Favicon Input */}
+            <div className="md:w-2/12 w-full">
+              <p className="mb-1">Favicon</p>
+              <label className="md:w-full w-1/2 h-[170px] border-2 rounded-xl border-slate-300 p-1 md:relative flex justify-center items-center cursor-pointer">
+                <InputField
+                  name="fav_icon"
+                  type="file"
+                  className="px-4 hidden"
+                  onChange={handleImageChange(setFaviconPreview, setFile2)}
                 />
-                <div className="md:absolute -right-3 -bottom-3 size-6 p-1 bg-white">
-                  <LuUploadCloud className="size-full" />
+                <div className="cursor-pointer w-full h-full flex justify-center items-center">
+                  <img
+                    className="w-full h-full object-contain"
+                    src={faviconPreview || userInformation?.fav_icon}
+                    alt="Favicon"
+                  />
+                  <div className="md:absolute -right-3 -bottom-3 size-6 p-1 bg-white">
+                    <LuUploadCloud className="size-full" />
+                  </div>
                 </div>
-              </div>
-            </label>
-          </div>
+              </label>
+            </div>
 
-          <div className="md:w-2/12 w-full flex flex-col justify-end h-full">
-            <div className="w-full mt-6 border border-slate-300 rounded-lg">
-              {isPending ? (
-                <LoadingAnimation size={30} color="#36d7b7" />
-              ) : (
-                <button className="bg-primary font-medium rounded-xl text-white w-full py-3">
-                  Update
-                </button>
-              )}
+            <div className="md:w-2/12 w-full flex flex-col justify-end h-full">
+              <div className="w-full mt-6 border border-slate-300 rounded-lg">
+                {isPending ? (
+                  <LoadingAnimation size={30} color="#36d7b7" />
+                ) : (
+                  <button className="bg-primary font-medium rounded-xl text-white w-full py-3">
+                    Update
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        {error ? (
-          <p className="text-red-500 text-[12px] mt-5">Warning : {error}</p>
-        ) : (
-          ""
-        )}
-      </Form>
+          {error ? (
+            <p className="text-red-500 text-[12px] mt-5">Warning : {error}</p>
+          ) : (
+            ""
+          )}
+        </Form>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
