@@ -9,10 +9,7 @@ const fetchLastSession = async () => {
 };
 
 const DashboardTable = () => {
-  const {
-    data: lastSessions,
-    isLoading,
-  } = useQuery({
+  const { data: lastSessions, isLoading } = useQuery({
     queryKey: ["lastSessions"],
     queryFn: fetchLastSession,
     staleTime: 10000,
@@ -36,16 +33,17 @@ const DashboardTable = () => {
   };
   return (
     <>
-      <div className="rounded-xl border-2 border-[#E2E2E9] pb-4">
-        <h4 className="text-[24px] font-semibold p-4 text-[#959799]">
-          Last Login Sessions
-        </h4>
-
-        {isLoading ? (
+      {isLoading ? (
+        <div className="mt-5">
           <Skeleton height={45} count={5} />
-        ) : (
-          <>
-            {lastSession?.length !== 0 ? (
+        </div>
+      ) : (
+        <>
+          {lastSession?.length !== 0 ? (
+            <div className="rounded-xl border-2 border-[#E2E2E9] pb-4">
+              <h4 className="text-[24px] font-semibold p-4 text-[#959799]">
+                Last Login Sessions
+              </h4>
               <div className="overflow-x-auto w-full">
                 <table className="overflow-x-auto border-collapse w-full">
                   <thead>
@@ -77,12 +75,12 @@ const DashboardTable = () => {
                   </tbody>
                 </table>
               </div>
-            ) : (
-              <p>No Data</p>
-            )}
-          </>
-        )}
-      </div>
+            </div>
+          ) : (
+            <p>No Data</p>
+          )}
+        </>
+      )}
     </>
   );
 };

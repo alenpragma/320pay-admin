@@ -6,7 +6,6 @@ const PaginationButtons = ({
   currentPage,
   totalPages,
 }: any) => {
-  console.log(setCurrentPage, currentPage, totalPages);
   const handlePageClick = ({ selected }: any) => {
     setCurrentPage(selected);
   };

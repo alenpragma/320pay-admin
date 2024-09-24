@@ -3,15 +3,17 @@ import axiosInstance from "../../utils/axiosConfig";
 import Skeleton from "react-loading-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import PaginationButtons from "../../Components/PaginationButton/PaginationButton";
 
 const PurchasePlaneHistory = () => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [editClient, setEditClient] = useState("");
-  const perPage = 2;
+  const perPage = 20;
 
   const fetchPurchasePlan = async () => {
     const [purchaseHistoryResponse, clientListsResponse] = await Promise.all([
-      axiosInstance.get(`/admin/purchase-history`),
+      axiosInstance.get(
+        `/admin/purchase-history?per_page=${perPage}&page=${currentPage + 1}`
+      ),
       axiosInstance.get(`/client-lists`),
     ]);
     return {
@@ -21,7 +23,7 @@ const PurchasePlaneHistory = () => {
   };
 
   const { data: purchasePlan, isLoading } = useQuery({
-    queryKey: ["purchaseHistory", "clientLists"],
+    queryKey: ["purchaseHistory", "clientLists", currentPage],
     queryFn: fetchPurchasePlan,
     staleTime: 10000,
     refetchOnWindowFocus: false,
@@ -30,6 +32,11 @@ const PurchasePlaneHistory = () => {
   });
   const userList = purchasePlan?.clientLists?.data;
   const purchase = purchasePlan?.purchaseHistory?.data?.data;
+
+  console.log(purchasePlan);
+
+  const totalUsers = purchasePlan?.purchaseHistory?.data?.total || 0;
+  const totalPages = Math.ceil(totalUsers / perPage);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -91,7 +98,9 @@ const PurchasePlaneHistory = () => {
                     <tbody className="bg-white">
                       {purchase?.map((data: any, index: number) => (
                         <tr key={index}>
-                          <TData className="px-6">{index + 1}</TData>
+                          <TData className="px-6">
+                            {index + 1 + perPage * currentPage}
+                          </TData>
                           <TData className="px-6">
                             {data?.created_at
                               ? formatDate(data.created_at)
@@ -138,6 +147,16 @@ const PurchasePlaneHistory = () => {
           </>
         )}
       </div>
+
+      {purchase?.length > 20 ? (
+        <PaginationButtons
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 };
