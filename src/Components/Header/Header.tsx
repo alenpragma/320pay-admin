@@ -3,6 +3,7 @@ import DropdownUser, { UserOne } from "./DropdownUser";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosConfig";
 import { images } from "../..";
+import { useSettingsData } from "../../hooks/FetchGlobalData/FetchGlobalData";
 // import DarkModeSwitcher from "./DarkModeSwitcher"
 
 const Header = (props: {
@@ -14,7 +15,7 @@ const Header = (props: {
   const [modal, setModal] = useState<boolean>(false);
   const [visible, setVisible] = useState(false);
   const [clientProfile, setClientProfile] = useState<any>();
-
+  const { data, isLoading } = useSettingsData();
   const capital = (text: string) => {
     if (!text) {
       return "";
@@ -98,7 +99,11 @@ const Header = (props: {
           </div>
 
           <NavLink to="/" className="md:hidden block">
-            <img className="w-[100px] h-7" src={images.logo} alt="" />
+            {!isLoading ? (
+              <img className="w-[100px] h-7" src={data?.logo} alt="" />
+            ) : (
+              ""
+            )}
           </NavLink>
         </div>
         {/* <!-- Hamburger Toggle BTN --> */}

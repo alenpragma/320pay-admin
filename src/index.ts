@@ -112,20 +112,20 @@ export const mainNavItem: MenuInterface[] = [
     icon1: deposit,
     icon2: depositHover,
   },
-  {
-    id: 114,
-    pathname: "/dashboard/licenses",
-    item: "Licenses",
-    icon1: filelock,
-    icon2: filelockHover,
-  },
-  {
-    id: 115,
-    pathname: "/dashboard/wallet",
-    item: "Wallet",
-    icon1: wallet,
-    icon2: walletHover,
-  },
+  // {
+  //   id: 114,
+  //   pathname: "/dashboard/licenses",
+  //   item: "Licenses",
+  //   icon1: filelock,
+  //   icon2: filelockHover,
+  // },
+  // {
+  //   id: 115,
+  //   pathname: "/dashboard/wallet",
+  //   item: "Wallet",
+  //   icon1: wallet,
+  //   icon2: walletHover,
+  // },
 ];
 export const subNavItem: MenuInterface[] = [
   {
@@ -177,15 +177,15 @@ export const submenuItem: MenuInterface[] = [
     id: 313,
     pathname: "settings/coupon",
     item: "Coupon Settings",
-    icon1: withdraw1,
-    icon2: withdraw1Hover,
+    icon1: wallet,
+    icon2: walletHover,
   },
   {
-    id: 313,
+    id: 314,
     pathname: "settings/token",
     item: "Token Settings",
-    icon1: withdraw1,
-    icon2: withdraw1Hover,
+    icon1: filelock,
+    icon2: filelockHover,
   },
 ];
 export const dashboardCard: CadeInterface[] = [

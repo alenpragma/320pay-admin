@@ -7,6 +7,7 @@ import { GoChevronDown } from "react-icons/go";
 import { RxExit } from "react-icons/rx";
 import { removePaymentaToken } from "../../hooks/handelAuthToken";
 import { handleLogOut } from "../../Actions/LogoutActions";
+import { useSettingsData } from "../../hooks/FetchGlobalData/FetchGlobalData";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -17,6 +18,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [submenu, setSubmenu] = useState(false);
   const location = useLocation();
   const { pathname } = location;
+
+  const { data, isLoading } = useSettingsData();
 
   const active = pathname === "/dashboard";
 
@@ -82,7 +85,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-2 lg:py-2.5 pt-8">
         <NavLink to="/dashboard" className=" w-full md:block hidden">
-          <img className="w-full h-14" src={images.logo} alt="" />
+          {!isLoading ? (
+            <img className="w-full h-14" src={data?.logo} alt="" />
+          ) : (
+            ""
+          )}
         </NavLink>
         <button
           // ref={trigger}
