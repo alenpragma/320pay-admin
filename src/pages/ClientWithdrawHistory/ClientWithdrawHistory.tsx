@@ -4,6 +4,8 @@ import Skeleton from "react-loading-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import PaginationButtons from "../../Components/PaginationButton/PaginationButton";
+import { copyToClipboard } from "../../utils/CopyAction/CopyAction";
+import { FaCopy } from "react-icons/fa";
 
 const ClientWithdrawHistory = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -55,6 +57,24 @@ const ClientWithdrawHistory = () => {
     return formattedDate;
   };
 
+  const [transitionTimeout, setTransitionTimeouts] = useState<string | null>(
+    null
+  );
+  const [walletTimeout, setWalletTimeouts] = useState<string | null>(null);
+
+  const handleCopy = (
+    copy: any,
+    transitionId: string | null,
+    walletId: string | null
+  ) => {
+    copyToClipboard(copy);
+    setTransitionTimeouts(transitionId);
+    setWalletTimeouts(walletId);
+    setTimeout(() => {
+      setTransitionTimeouts(null);
+      setWalletTimeouts(null)
+    }, 3000);
+  };
   return (
     <>
       <div className="md:p-6 px-3 pt-4">
@@ -120,12 +140,68 @@ const ClientWithdrawHistory = () => {
                               ))}
                           </TData>
                           <TData className="px-6">
-                            {data?.txn_hash?.slice(0, 8)}...
-                            {data?.txn_hash?.slice(-4)}
+                            <div className="flex items-center gap-3">
+                              {data?.txn_hash?.slice(0, 8)}...
+                              {data?.txn_hash?.slice(-4)}
+                              {transitionTimeout !== null &&
+                              transitionTimeout == data?.id ? (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  className="size-6"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m4.5 12.75 6 6 9-13.5"
+                                  />
+                                </svg>
+                              ) : (
+                                <FaCopy
+                                  className="size-6"
+                                  onClick={() =>
+                                    handleCopy(data?.txn_hash, data?.id, null)
+                                  }
+                                />
+                              )}
+                            </div>
                           </TData>
                           <TData className="px-6">
-                            {data?.wallet_address?.slice(0, 8)}...
-                            {data?.wallet_address?.slice(-4)}
+                            <div className="flex items-center gap-3">
+                              {data?.wallet_address?.slice(0, 8)}...
+                              {data?.wallet_address?.slice(-4)}
+                              {walletTimeout !== null &&
+                              walletTimeout == data?.id ? (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  className="size-6"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m4.5 12.75 6 6 9-13.5"
+                                  />
+                                </svg>
+                              ) : (
+                                <FaCopy
+                                  className="size-6"
+                                  onClick={() =>
+                                    handleCopy(
+                                      data?.wallet_address,
+                                      null,
+                                      data?.id
+                                    )
+                                  }
+                                />
+                              )}
+                            </div>
                           </TData>
                           <TData className="px-6">
                             {tokenList
