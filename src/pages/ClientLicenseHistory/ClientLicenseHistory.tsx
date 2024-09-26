@@ -103,7 +103,7 @@ const ClientLicenseHistory = () => {
                           <TData className="px-6">
                             {data?.status !== "0" ? (
                               <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
-                                <span>Deactive</span>
+                                <span>Expired</span>
                               </div>
                             ) : (
                               <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
