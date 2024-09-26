@@ -5,7 +5,7 @@ import Form from "../../Components/Forms/Form";
 import InputField from "../../Components/Forms/InputField";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import { useState } from "react";
@@ -135,14 +135,6 @@ const Login = () => {
                   <p className="text-red-500 text-[12px] mt-3">{error}</p>{" "}
                 </div>
               </div>
-              <div className="text-right">
-                <Link
-                  to="/password-reset"
-                  className="text-primary font-medium underline text-[14px]"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
 
               <div className="w-full mt-6 border border-slate-300 rounded-lg">
                 {isPending ? (
@@ -151,12 +143,6 @@ const Login = () => {
                   <LoadingButton className="w-full">Login</LoadingButton>
                 )}
               </div>
-              <p className="text-secondary text-[14px]">
-                Don't have an Account?{" "}
-                <Link to="/register" className="text-primary">
-                  Sign Up
-                </Link>
-              </p>
             </div>
           </Form>
         </div>
