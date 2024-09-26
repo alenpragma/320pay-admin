@@ -10,10 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import AddNewtoken from "../../Components/Modal/TokenModal/AddNewToken";
 import TokenEditModal from "../../Components/Modal/TokenModal/TokenEditModal";
 
-const fetchToken = async () => {
-  const response = await axiosInstance.get("/deposit-tokens");
-  return response;
-};
 
 const fetchPlan = async () => {
   const [allTokens, allChain] = await Promise.all([
