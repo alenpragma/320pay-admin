@@ -11,6 +11,7 @@ export const usePostAction = (
   const mutation = useMutation({
     mutationFn: async (postData: FieldValues) => {
       const response = await axiosInstance.post(url, postData);
+      console.log(response);
       return response.data;
     },
     onSuccess: (data) => {

@@ -10,7 +10,7 @@ const GeneralSettings = () => {
     return response;
   };
 
-  const { data: logoFavicon, refetch } = useQuery({
+  const { data: logoFavicon, refetch, isLoading } = useQuery({
     queryKey: ["logoFavicon"],
     queryFn: fetchLogoAndFavicon,
     staleTime: 10000,
@@ -24,8 +24,11 @@ const GeneralSettings = () => {
   return (
     <div className="pb-10">
       <LogoAndFavicon userInformation={userInformation} refetch={refetch} />
-      <MetaTitleAndDescription userInformation={userInformation} refetch={refetch}/>
-      <PaymentSettings />
+      <MetaTitleAndDescription
+        userInformation={userInformation}
+        refetch={refetch}
+      />
+      <PaymentSettings userInformation={userInformation} refetch={refetch} isLoading={isLoading} />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { images } from "../..";
 import { LuUploadCloud } from "react-icons/lu";
 import InputField from "../Forms/InputField";
 import Form from "../Forms/Form";
