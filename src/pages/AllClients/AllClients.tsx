@@ -124,7 +124,7 @@ const AllClients = () => {
                         Wallet Address
                       </th>
                       <th className="py-2 px-6 text-start text-nowrap">
-                        Secret Key
+                        Private Key
                       </th>
                       <th className="py-2 px-6 text-start text-nowrap">
                         Active Licence

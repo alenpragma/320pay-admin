@@ -3,7 +3,6 @@ import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import Swal from "sweetalert2";
@@ -12,6 +11,8 @@ import { usePostAction } from "../../../utils/PostAction/PostAction";
 export const validationSchema = z.object({
   name: z.string().min(1, "This field is required"),
   email: z.string().min(1, "This field is required"),
+  secret_key: z.string().min(1, "This field is required"),
+  client_wallet_address: z.string().min(1, "This field is required"),
 });
 export type IProps = {
   modal: boolean;
@@ -20,9 +21,8 @@ export type IProps = {
   editClient?: any;
 };
 const EditClients = ({ handleModal, modal, refetch, editClient }: IProps) => {
-  const { name, email, id } = editClient;
-  console.log(name, email, id);
-  const { mutate, isPending } = usePostAction(
+  const { name, email} = editClient;
+  const { mutate } = usePostAction(
     "/user/update",
     refetch,
     handleModal
@@ -80,6 +80,8 @@ const EditClients = ({ handleModal, modal, refetch, editClient }: IProps) => {
                 defaultValues={{
                   name: name,
                   email: email,
+                  secret_key : "akjdljfaskd",
+                  client_wallet_address : "akjdljfaskdasdfsf",
                 }}
               >
                 <div className="md:w-11/12 w-full mx-auto">
@@ -101,6 +103,28 @@ const EditClients = ({ handleModal, modal, refetch, editClient }: IProps) => {
                     <InputField
                       name="email"
                       type="email"
+                      className="px-4"
+                      placeholder="Edit Email"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Private Key
+                    </p>
+                    <InputField
+                      name="secret_key"
+                      type="text"
+                      className="px-4"
+                      placeholder="Edit Email"
+                    />
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="font-semibold text-secondary mb-1">
+                      Wallet Address
+                    </p>
+                    <InputField
+                      name="client_wallet_address"
+                      type="text"
                       className="px-4"
                       placeholder="Edit Email"
                     />

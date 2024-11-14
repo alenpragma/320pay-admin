@@ -142,7 +142,7 @@ input[type="number"] {
 .custom-swal-modal .swal2-actions {
   flex-direction: row-reverse; /* Reverse the order of the buttons */
 }
-.custom-swal-modal .swal2-cancel {
+.custom-swal-modal .swal2-cancel, .swal2-styled {
   padding: 10px 30px;
 }
 
@@ -157,9 +157,6 @@ input[type="number"] {
     width: 400px; /* Adjust for larger screens */
   }
 }
-
-
-
 
 .pageButton a {
   text-align: center;
@@ -181,3 +178,4 @@ input[type="number"] {
     height: 20px;
   }
 }
+
