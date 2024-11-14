@@ -162,7 +162,7 @@ const AllClients = () => {
                               <span>Active</span>
                             </div>
                           )} */}
-                          3 Active License
+                         {user?.activation_status} License
                         </TData>
                         <TData className="px-6">
                           {user?.created_at
