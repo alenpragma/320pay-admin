@@ -153,7 +153,7 @@ const AllClients = () => {
                         </TData>
                         <TData className="px-6">{user?.secret_key}</TData>
                         <TData className="px-6">
-                          {user?.activation_status !== "0" ? (
+                          {/* {user?.activation_status !== "0" ? (
                             <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg text-red-500">
                               <span>Deactive</span>
                             </div>
@@ -161,7 +161,8 @@ const AllClients = () => {
                             <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg text-green-500">
                               <span>Active</span>
                             </div>
-                          )}
+                          )} */}
+                          3 Active License
                         </TData>
                         <TData className="px-6">
                           {user?.created_at
