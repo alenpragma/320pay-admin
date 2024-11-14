@@ -27,7 +27,6 @@ const ClientLicenseHistory = () => {
   const licenses = license?.data?.data?.data;
   const totalLicense = license?.data?.data?.total || 0;
   const totalPages = Math.ceil(totalLicense / perPage);
-  console.log(totalPages);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -77,7 +76,7 @@ const ClientLicenseHistory = () => {
                           License Key
                         </th>
                         <th className="py-2 px-6 text-start  whitespace-nowrap rounded-tr-xl">
-                          Status
+                          License Status
                         </th>
                       </tr>
                     </thead>

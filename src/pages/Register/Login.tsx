@@ -50,7 +50,7 @@ const Login = () => {
           title: "Successfully",
           icon: "success",
           customClass: {
-            popup: "custom-swal-modal",
+            popup: "custom-swal-modal login-swall",
           },
         });
         navigate("/");
