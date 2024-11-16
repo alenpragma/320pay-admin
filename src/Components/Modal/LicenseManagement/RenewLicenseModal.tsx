@@ -28,9 +28,9 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
 
   const fetchData = async () => {
     const [allusers, plans, license] = await Promise.all([
-      axiosInstance.get(`/client-lists`),
-      axiosInstance.get(`/client/packages`),
-      axiosInstance.get(`/admin/license-history`),
+      axiosInstance.get(`/client-lists?per_page=50`),
+      axiosInstance.get(`/client/packages?per_page=50`),
+      axiosInstance.get(`/admin/license-history?per_page=50`),
     ]);
     return {
       allusers: allusers.data,
@@ -49,6 +49,7 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
   const allusers = data?.allusers?.data;
   const allPlans = data?.plans?.packages;
   const license = data?.license?.data?.data;
+  console.log(license);
 
   const option =
     allPlans?.map((item: { id: string; package_name: string }) => ({
@@ -68,9 +69,11 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
       const filteredData = allusers?.filter(
         (item: { email: string }) => item?.email === inputValue
       );
+
       const filterDomain = license?.filter(
         (item: { email: string }) => item?.email === inputValue
       );
+      console.log(filterDomain);
       if (filterDomain) {
         setFilterDomain(filterDomain);
       }
