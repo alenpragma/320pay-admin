@@ -20,26 +20,26 @@ export type IProps = {
   handleRenewModal: (id: string) => void;
 };
 const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
+  const [filterUserData, setFilterUserData] = useState([]);
+  const [filterDomain, setFilterDomain] = useState([]);
   const formSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log(data);
   };
 
   const fetchData = async () => {
-    const [allusers, plans] = await Promise.all([
+    const [allusers, plans, license] = await Promise.all([
       axiosInstance.get(`/client-lists`),
       axiosInstance.get(`/client/packages`),
+      axiosInstance.get(`/admin/license-history`),
     ]);
     return {
       allusers: allusers.data,
       plans: plans.data,
+      license: license.data,
     };
   };
-  const {
-    data: data,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["allUsers", "plans"],
+  const { data: data } = useQuery({
+    queryKey: ["allUsers", "plans", "license"],
     queryFn: fetchData,
     staleTime: 10000,
     refetchOnWindowFocus: false,
@@ -48,21 +48,38 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
   });
   const allusers = data?.allusers?.data;
   const allPlans = data?.plans?.packages;
+  const license = data?.license?.data?.data;
 
-  const option = allPlans?.map((item: { id: number; package_name: string }) => ({
-    label: item.package_name,
-    value: item.id,
-  }));
-  const [filterUserData, setFilterUserData] = useState("");
+  const option =
+    allPlans?.map((item: { id: string; package_name: string }) => ({
+      label: item.package_name,
+      value: item.id,
+    })) || [];
+
+  const allDomain =
+    filterDomain?.map((item: { id: string; domain_name: string }) => ({
+      label: item.domain_name,
+      value: item.id,
+    })) || [];
+
   const handleEmailChange = (change: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = change.target.value;
     if (inputValue.endsWith("@gmail.com")) {
       const filteredData = allusers?.filter(
         (item: { email: string }) => item?.email === inputValue
       );
-      return setFilterUserData(filteredData);
+      const filterDomain = license?.filter(
+        (item: { email: string }) => item?.email === inputValue
+      );
+      if (filterDomain) {
+        setFilterDomain(filterDomain);
+      }
+      if (filteredData) {
+        setFilterUserData(filteredData);
+      }
     } else {
-      setFilterUserData("");
+      setFilterUserData([]);
+      setFilterDomain([]);
     }
   };
 
@@ -83,7 +100,7 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
             : "bottom-0 opacity-0 duration-300 pointer-events-none"
         }`}
       >
-        <div className="w-full h-full rounded bg-[#ffffff] ">
+        <div className="w-full h-fit rounded bg-[#ffffff] ">
           <div className="w-full py-3 px-5 bg-primary text-white font-semibold text-[20px] flex justify-between items-center rounded-t">
             <h4>Renew License</h4>
             <RxCross1
@@ -111,7 +128,7 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
                     onChange={handleEmailChange}
                   />
                   <div className="size-6 p-[3px] border border-slate-300 rounded-full absolute right-3 top-8">
-                    {filterUserData !== "" ? (
+                    {filterUserData?.length !== 0 ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -146,14 +163,14 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
                   <p className="font-semibold text-secondary mb-1">
                     Domain Name
                   </p>
-                  <InputField
+                  <SelectField
                     name="domain"
-                    type="text"
-                    className="px-2"
-                    placeholder="Set Client"
+                    options={allDomain}
+                    type="string"
+                    required
                   />
                 </div>
-                <LoadingButton className="w-full">Update License</LoadingButton>
+                <LoadingButton className="w-full mt-10">Update License</LoadingButton>
               </div>
             </Form>
           </div>

@@ -49,20 +49,25 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
   const allusers = data?.allusers?.data;
   const allPlans = data?.plans?.packages;
 
-  const option = allPlans?.map((item: { id: number; package_name: string }) => ({
-    label: item.package_name,
-    value: item.id,
-  }));
-  const [filterUserData, setFilterUserData] = useState("");
+  const option = allPlans?.map(
+    (item: { id: number; package_name: string }) => ({
+      label: item.package_name,
+      value: item.id,
+    })
+  );
+  const [filterUserData, setFilterUserData] = useState([]);
   const handleEmailChange = (change: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = change.target.value;
     if (inputValue.endsWith("@gmail.com")) {
       const filteredData = allusers?.filter(
         (item: { email: string }) => item?.email === inputValue
       );
-      return setFilterUserData(filteredData);
+      console.log(filteredData);
+      if (filteredData) {
+        setFilterUserData(filteredData);
+      }
     } else {
-      setFilterUserData("");
+      setFilterUserData([]);
     }
   };
 
@@ -111,7 +116,7 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
                     onChange={handleEmailChange}
                   />
                   <div className="size-6 p-[3px] border border-slate-300 rounded-full absolute right-3 top-8">
-                    {filterUserData !== "" ? (
+                    {filterUserData?.length !== 0 ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
