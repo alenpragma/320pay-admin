@@ -1,11 +1,11 @@
-// import { Controller, useFormContext } from "react-hook-form"
-// import Select from "react-select"
+// import { Controller, useFormContext } from "react-hook-form";
+// import Select, { components } from "react-select";
 
 // type TOption = {
-//   label: string
-//   value: string
-//   // id?: string
-// }
+//   label: string;
+//   value: string;
+//   image?: string;
+// };
 
 // type TSelectProps = {
 //   name: string;
@@ -13,6 +13,7 @@
 //   options: TOption[];
 //   placeholder?: string;
 //   required?: boolean;
+//   type?: string | undefined;
 //   onChange?: (value: string) => void;
 // };
 
@@ -20,11 +21,28 @@
 //   name,
 //   className,
 //   options,
+//   // type,
 //   placeholder,
 //   required,
 //   onChange,
 // }: TSelectProps) => {
 //   const { control } = useFormContext();
+
+//   // Custom Option component to show the image and label
+//   const CustomOption = (props: any) => (
+//     <components.Option {...props}>
+//       <div className="flex items-center">
+//         {props.data.image && (
+//           <img
+//             src={props.data.image}
+//             alt={props.data.label}
+//             className="w-6 h-6 mr-2"
+//           />
+//         )}
+//         {props.data.label}
+//       </div>
+//     </components.Option>
+//   );
 
 //   return (
 //     <Controller
@@ -34,25 +52,25 @@
 //         <div className="flex flex-col">
 //           <Select
 //             {...field}
+//             // type={type}
 //             options={options}
 //             placeholder={placeholder}
 //             className={className}
 //             isClearable={!required}
 //             value={
-//               options.find((option) => option.value === field.value) || null
+//               options?.find((option) => option.value === field.value) || null
 //             }
 //             onChange={(option) => {
 //               field.onChange(option?.value);
 //               if (onChange) {
-//                 onChange(option?.value || "") // Call the parent onChange
+//                 onChange(option?.value || ""); // Call the parent onChange
 //               }
 //             }}
 //             onBlur={field.onBlur}
+//             components={{ Option: CustomOption }} // Use custom option component
 //           />
-//           {error ? (
+//           {error && (
 //             <span className="text-[#e82828] text-[14px]">{error.message}</span>
-//           ) : (
-//             ""
 //           )}
 //         </div>
 //       )}
@@ -62,35 +80,37 @@
 
 // export default SelectField;
 
-import { Controller, useFormContext } from "react-hook-form"
-import Select, { components } from "react-select"
+
+
+
+import { Controller, useFormContext } from "react-hook-form";
+import Select, { components } from "react-select";
 
 type TOption = {
-  label: string
-  value: string
-  image?: string
-}
+  label: string;
+  value: string;
+  image?: string;
+};
 
 type TSelectProps = {
-  name: string
-  className?: string
-  options: TOption[]
-  placeholder?: string
-  required?: boolean
-  type?: string | undefined
-  onChange?: (value: string) => void
-}
+  name: string;
+  className?: string;
+  options: TOption[];
+  placeholder?: string;
+  required?: boolean;
+  type?: string | undefined;
+  onChange?: (value: string) => void;
+};
 
 const SelectField = ({
   name,
   className,
   options,
-  // type,
   placeholder,
   required,
   onChange,
 }: TSelectProps) => {
-  const { control } = useFormContext()
+  const { control } = useFormContext();
 
   // Custom Option component to show the image and label
   const CustomOption = (props: any) => (
@@ -106,7 +126,16 @@ const SelectField = ({
         {props.data.label}
       </div>
     </components.Option>
-  )
+  );
+
+  // Styles for react-select to limit the visible items
+  const customStyles = {
+    menuList: (base: any) => ({
+      ...base,
+      maxHeight: 120, // Adjust this value as per your needs; this example is for roughly 3 items
+      overflowY: 'auto',
+    }),
+  };
 
   return (
     <Controller
@@ -116,7 +145,6 @@ const SelectField = ({
         <div className="flex flex-col">
           <Select
             {...field}
-            // type={type}
             options={options}
             placeholder={placeholder}
             className={className}
@@ -125,13 +153,14 @@ const SelectField = ({
               options?.find((option) => option.value === field.value) || null
             }
             onChange={(option) => {
-              field.onChange(option?.value)
+              field.onChange(option?.value);
               if (onChange) {
-                onChange(option?.value || "") // Call the parent onChange
+                onChange(option?.value || ""); // Call the parent onChange
               }
             }}
             onBlur={field.onBlur}
             components={{ Option: CustomOption }} // Use custom option component
+            styles={customStyles} // Apply custom styles for menuList
           />
           {error && (
             <span className="text-[#e82828] text-[14px]">{error.message}</span>
@@ -139,7 +168,7 @@ const SelectField = ({
         </div>
       )}
     />
-  )
-}
+  );
+};
 
-export default SelectField
+export default SelectField;
