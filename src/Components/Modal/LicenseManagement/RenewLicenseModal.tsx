@@ -148,17 +148,7 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
                     )}
                   </div>
                 </div>
-                <div className="relative mb-4">
-                  <p className="font-semibold text-secondary mb-1">
-                    Selected Plan
-                  </p>
-                  <SelectField
-                    name="visible_status"
-                    options={option}
-                    type="string"
-                    required
-                  />
-                </div>
+
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">
                     Domain Name
@@ -170,7 +160,20 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
                     required
                   />
                 </div>
-                <LoadingButton className="w-full mt-10">Update License</LoadingButton>
+                <div className="relative mb-4">
+                  <p className="font-semibold text-secondary mb-1">
+                    Selected Plan
+                  </p>
+                  <SelectField
+                    name="visible_status"
+                    options={option}
+                    type="string"
+                    required
+                  />
+                </div>
+                <LoadingButton className="w-full mt-10">
+                  Update License
+                </LoadingButton>
               </div>
             </Form>
           </div>
