@@ -49,7 +49,7 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
   const allusers = data?.allusers?.data;
   const allPlans = data?.plans?.packages;
 
-  const option = allPlans.map((item: { id: number; package_name: string }) => ({
+  const option = allPlans?.map((item: { id: number; package_name: string }) => ({
     label: item.package_name,
     value: item.id,
   }));
