@@ -3,7 +3,6 @@ import Form from "../../Forms/Form";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import LoaingAnimation from "../../Loading/LoaingAnimation";
 import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import Swal from "sweetalert2";
@@ -21,8 +20,7 @@ export type IProps = {
 };
 const EditClients = ({ handleModal, modal, refetch, editClient }: IProps) => {
   const { name, email, id } = editClient;
-  console.log(name, email, id);
-  const { mutate, isPending } = usePostAction(
+  const { mutate } = usePostAction(
     "/user/update",
     refetch,
     handleModal

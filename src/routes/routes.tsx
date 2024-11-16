@@ -36,6 +36,7 @@ import AllClients from "../pages/AllClients/AllClients";
 import PurchasePlaneHistory from "../pages/PurchasePlaneHistory/PurchasePlaneHistory";
 import ClientLicenseHistory from "../pages/ClientLicenseHistory/ClientLicenseHistory";
 import ClientWithdrawHistory from "../pages/ClientWithdrawHistory/ClientWithdrawHistory";
+import LicenseManagement from "../pages/LicenseManagement/LicenseManagement";
 
 const routes = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const routes = createBrowserRouter([
       {
         path: "all-clients",
         element: <AllClients />,
+      },
+      {
+        path: "license-management",
+        element: <LicenseManagement />,
       },
       {
         path: "settings/plan",
@@ -94,58 +99,6 @@ const routes = createBrowserRouter([
         path: "client-withdraw-history",
         element: <ClientWithdrawHistory />,
       },
-      // {
-      //   path: "start-here",
-      //   element: <StartHere />,
-      // },
-      // {
-      //   path: "deposit",
-      //   element: <Deposit />,
-      // },
-      // {
-      //   path: "wallet",
-      //   element: <Wallet />,
-      // },
-      // {
-      //   path: "payment",
-      //   element: <Payment />,
-      // },
-      // {
-      //   path: "licenses",
-      //   element: <Licenses />,
-      // },
-      // {
-      //   path: "transaction-history",
-      //   element: <TransitionHistory />,
-      // },
-      // {
-      //   path: "purchase-plan",
-      //   element: <PurchasePlane />,
-      // },
-      // {
-      //   path: "deposit-log",
-      //   element: <DepositLog />,
-      // },
-      // {
-      //   path: "withdraw-history",
-      //   element: <WithdrawHistory />,
-      // },
-      // {
-      //   path: "withdraw",
-      //   element: <Withdraw />,
-      // },
-      // {
-      //   path: "withdraw/preview/otp",
-      //   element: <Otp />,
-      // },
-      // {
-      //   path: "withdraw/preview",
-      //   element: <Preview />,
-      // },
-      // {
-      //   path: "change-password",
-      //   element: <ChangePassword />,
-      // },
     ],
   },
   {

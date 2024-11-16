@@ -20,7 +20,6 @@ export const validationSchema = z.object({
 
 const AllClients = () => {
   const [modal, setModal] = useState<boolean>(false);
-
   const [currentPage, setCurrentPage] = useState(0);
   const [editClient, setEditClient] = useState("");
   const perPage = 20;

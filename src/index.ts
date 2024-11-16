@@ -112,6 +112,13 @@ export const mainNavItem: MenuInterface[] = [
     icon1: deposit,
     icon2: depositHover,
   },
+  {
+    id: 115,
+    pathname: "/dashboard/license-management",
+    item: "License Management",
+    icon1: deposit,
+    icon2: depositHover,
+  },
   // {
   //   id: 114,
   //   pathname: "/dashboard/licenses",
