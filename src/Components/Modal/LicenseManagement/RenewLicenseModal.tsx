@@ -65,7 +65,11 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
 
   const handleEmailChange = (change: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = change.target.value;
-    if (inputValue.endsWith("@gmail.com")) {
+    if (
+      inputValue.endsWith("@gmail.com") ||
+      inputValue.endsWith("@roamcoin.io") ||
+      inputValue.endsWith("@cellprotocol.us")
+    ) {
       const filteredData = allusers?.filter(
         (item: { email: string }) => item?.email === inputValue
       );
