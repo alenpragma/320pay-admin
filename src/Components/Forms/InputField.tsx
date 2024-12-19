@@ -57,6 +57,7 @@ type TInputProps = {
   defaultValue?: string;
   maxlength?: number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  readonly?: boolean;
 };
 
 const InputField = ({
@@ -68,6 +69,7 @@ const InputField = ({
   required,
   maxlength,
   onChange,
+  readonly,
 }: TInputProps) => {
   const { control } = useFormContext();
   return (
@@ -95,6 +97,7 @@ const InputField = ({
               field.onChange(e);
               if (onChange) onChange(e);
             }}
+            readOnly={readonly}
           />
           {error && type !== "checkbox" && (
             <span className="text-[#e82828] text-[14px]">{error.message}</span>

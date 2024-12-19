@@ -6,13 +6,16 @@ import LoadingButton from "../../Loading/LoadingButton";
 import InputField from "../../Forms/InputField";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import axiosInstance from "../../../utils/axiosConfig";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import SelectField from "../../Forms/SelecetField";
+import Swal from "sweetalert2";
+import LoadingAnimation from "../../Loading/LoaingAnimation";
 
 export const validationSchema = z.object({
-  name: z.string().min(1, "This field is required"),
-  email: z.string().min(1, "This field is required"),
+  client_id: z.string().min(1, "This field is required"),
+  package_id: z.number().min(1, "This field is required"),
+  domain_name: z.string().min(1, "This field is required"),
 });
 
 export type IProps = {
@@ -20,26 +23,20 @@ export type IProps = {
   handleModal: (id: string) => void;
 };
 const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
-  const formSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
-  };
-
   const fetchData = async () => {
-    const [allusers, plans] = await Promise.all([
+    const [allusers, plans, license] = await Promise.all([
       axiosInstance.get(`/client-lists`),
       axiosInstance.get(`/client/packages`),
+      axiosInstance.get(`/admin/license-history`),
     ]);
     return {
       allusers: allusers.data,
       plans: plans.data,
+      license: license.data,
     };
   };
-  const {
-    data: data,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["allUsers", "plans"],
+  const { data: data } = useQuery({
+    queryKey: ["allUsers", "plans", "licensHistory"],
     queryFn: fetchData,
     staleTime: 10000,
     refetchOnWindowFocus: false,
@@ -48,16 +45,18 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
   });
   const allusers = data?.allusers?.data;
   const allPlans = data?.plans?.packages;
+  const licenseHistory = data?.license?.data?.data;
 
-  const option = allPlans?.map(
-    (item: { id: number; package_name: string }) => ({
-      label: item.package_name,
-      value: item.id,
-    })
-  );
   const [filterUserData, setFilterUserData] = useState([]);
+  const [domainData, setDomainData] = useState([]);
+  const [userId, setUserId] = useState();
+
   const handleEmailChange = (change: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = change.target.value;
+    const filterData = licenseHistory?.filter(
+      (item: { email: string }) => item?.email === inputValue
+    );
+    setDomainData(filterData);
     if (
       inputValue.endsWith("@gmail.com") ||
       inputValue.endsWith("@roamcoin.io") ||
@@ -66,12 +65,68 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
       const filteredData = allusers?.filter(
         (item: { email: string }) => item?.email === inputValue
       );
-      console.log(filteredData);
+
+      const id = filteredData[0]?.id;
+      setUserId(id);
       if (filteredData) {
         setFilterUserData(filteredData);
       }
     } else {
       setFilterUserData([]);
+    }
+  };
+
+  const domainOption = domainData?.map((item: { domain_name: string }) => ({
+    label: item.domain_name,
+    value: item.domain_name,
+  }));
+  const option = allPlans?.map(
+    (item: { package_name: string; id: number }) => ({
+      label: item.package_name,
+      value: item.id,
+    })
+  );
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (licenseData: FieldValues) => {
+      return;
+      const response = await axiosInstance.post(
+        "/admin/add-new-license",
+        licenseData
+      );
+      return response.data;
+    },
+    onSuccess: (data: any) => {
+      if (data?.success == 200) {
+        Swal.fire({
+          title: "Successfully",
+          icon: "success",
+          customClass: {
+            popup: "custom-swal-modal login-swall",
+          },
+        });
+      }
+    },
+  });
+
+  const formSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const result = await Swal.fire({
+      text: "Are you sure to add new license?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Update",
+      cancelButtonText: "Cancel",
+      customClass: {
+        popup: "custom-swal-modal",
+      },
+    });
+    if (result.isConfirmed) {
+      const filterData = {
+        ...data,
+        client_id: userId,
+      };
+      mutate(filterData);
     }
   };
 
@@ -100,20 +155,21 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
               className="cursor-pointer hover:scale-105"
             />
           </div>
-          <div className="px-5 pb-10 pt-8 max-h-[500px] overflow-auto">
+          <div className="px-5 pb-20 pt-8 max-h-[500px] overflow-auto">
             <Form
               onSubmit={formSubmit}
               resolver={zodResolver(validationSchema)}
               defaultValues={{
-                name: "",
-                email: "",
+                client_id: "",
+                package_id: "",
+                domain_name: "",
               }}
             >
               <div className="md:w-11/12 w-full mx-auto">
                 <div className="relative mb-4">
                   <p className="font-semibold text-secondary mb-1">Client</p>
                   <InputField
-                    name="client"
+                    name="client_id"
                     type="text"
                     className="px-2"
                     placeholder="Set Client"
@@ -145,9 +201,9 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
                     Selected Plan
                   </p>
                   <SelectField
-                    name="visible_status"
+                    name="package_id"
                     options={option}
-                    type="string"
+                    type="number"
                     required
                   />
                 </div>
@@ -155,14 +211,22 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
                   <p className="font-semibold text-secondary mb-1">
                     Domain Name
                   </p>
-                  <InputField
-                    name="domain"
-                    type="text"
-                    className="px-2"
-                    placeholder="Set Client"
+                  <SelectField
+                    name="domain_name"
+                    options={domainOption}
+                    type="string"
+                    required
                   />
                 </div>
-                <LoadingButton className="w-full">Submit</LoadingButton>
+                <div className="w-full mt-6 border border-slate-300 rounded-lg">
+                  {isPending ? (
+                    <LoadingAnimation size={30} color="#36d7b7" />
+                  ) : (
+                    <LoadingButton className="w-full">
+                      Create License
+                    </LoadingButton>
+                  )}
+                </div>
               </div>
             </Form>
           </div>

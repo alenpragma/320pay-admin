@@ -51,6 +51,7 @@ const AllClients = () => {
   const allUserData = allusers?.data?.data || [];
   const totalUsers = allusers?.data?.total || 0;
   const totalPages = Math.ceil(totalUsers / perPage);
+  console.log(totalPages);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -187,7 +188,7 @@ const AllClients = () => {
           )}
         </>
       )}
-      {totalUsers > 20 ? (
+      {totalUsers > 3 ? (
         <PaginationButtons
           totalPages={totalPages}
           currentPage={currentPage}
