@@ -27,7 +27,7 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
     const [allusers, plans, license] = await Promise.all([
       axiosInstance.get(`/client-lists`),
       axiosInstance.get(`/client/packages`),
-      axiosInstance.get(`/admin/license-history`),
+      axiosInstance.get(`/admin/license-history?per_page=10000`),
     ]);
     return {
       allusers: allusers.data,
@@ -53,9 +53,11 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
 
   const handleEmailChange = (change: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = change.target.value;
+
     const filterData = licenseHistory?.filter(
       (item: { email: string }) => item?.email === inputValue
     );
+
     setDomainData(filterData);
     if (
       inputValue.endsWith("@gmail.com") ||

@@ -10,7 +10,7 @@ const ClientLicenseHistory = () => {
   const perPage = 20;
   const fetchLicence = async () => {
     const response = await axiosInstance.get(
-      `admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
+      `/admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
     );
     return response;
   };
@@ -40,28 +40,6 @@ const ClientLicenseHistory = () => {
       hour12: true,
     });
     return formattedDate;
-  };
-
-  const calculateTimeLeft = (endDate: string) => {
-    if (!endDate) return null;
-
-    const now = new Date();
-    const end = new Date(endDate);
-    const difference = end.getTime() - now.getTime();
-
-    if (difference > 0) {
-      return (
-        <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
-          <span>Active</span>
-        </div>
-      );
-    } else {
-      return (
-        <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
-          <span>Expired</span>
-        </div>
-      );
-    }
   };
 
   return (
@@ -122,7 +100,15 @@ const ClientLicenseHistory = () => {
 
                           <TData className="px-6">{data?.license_key}</TData>
                           <TData className="px-6">
-                            {calculateTimeLeft(data?.end_date)}
+                            {data?.status === 0 ? (
+                              <div className="bg-green-200 text-center w-[100px] px-3 py-1 rounded-lg  text-green-500">
+                                <span>Active</span>
+                              </div>
+                            ) : (
+                              <div className="bg-red-200 w-[100px] text-center px-3 py-1 rounded-lg  text-red-500">
+                                <span>Expired</span>
+                              </div>
+                            )}
                           </TData>
                         </tr>
                       ))}
