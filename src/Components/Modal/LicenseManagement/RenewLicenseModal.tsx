@@ -98,7 +98,6 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
   };
   const { mutate, isPending } = useMutation({
     mutationFn: async (licenseData: FieldValues) => {
-      return;
       const response = await axiosInstance.post(
         "/admin/renew-license",
         licenseData
@@ -108,12 +107,13 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
     onSuccess: (data: any) => {
       if (data?.success == 200) {
         Swal.fire({
-          title: "Successfully",
+          title: data?.message,
           icon: "success",
           customClass: {
             popup: "custom-swal-modal login-swall",
           },
         });
+        handleRenewModal("");
       }
     },
   });
@@ -134,6 +134,7 @@ const RenewLicenseModal = ({ renewModal, handleRenewModal }: IProps) => {
       const filterData = {
         ...data,
         client_id: userId,
+        license_key: license,
       };
       mutate(filterData);
     }

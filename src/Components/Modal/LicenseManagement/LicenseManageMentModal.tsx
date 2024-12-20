@@ -89,7 +89,6 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (licenseData: FieldValues) => {
-      return;
       const response = await axiosInstance.post(
         "/admin/add-new-license",
         licenseData
@@ -99,13 +98,22 @@ const LicenseManageMentModal = ({ modal, handleModal }: IProps) => {
     onSuccess: (data: any) => {
       if (data?.success == 200) {
         Swal.fire({
-          title: "Successfully",
+          title: data?.message,
           icon: "success",
           customClass: {
             popup: "custom-swal-modal login-swall",
           },
         });
       }
+    },
+    onError(error: any) {
+      Swal.fire({
+        title: "Something Went Wrong",
+        icon: "error",
+        customClass: {
+          popup: "custom-swal-modal login-swall",
+        },
+      });
     },
   });
 
