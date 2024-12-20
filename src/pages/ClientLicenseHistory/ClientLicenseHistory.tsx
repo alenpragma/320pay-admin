@@ -10,7 +10,7 @@ const ClientLicenseHistory = () => {
   const perPage = 20;
   const fetchLicence = async () => {
     const response = await axiosInstance.get(
-      `admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
+      `/admin/license-history?per_page=${perPage}&page=${currentPage + 1}`
     );
     return response;
   };
